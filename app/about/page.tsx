@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ImageWithFallback } from "@/components/ImageWithFallback"
 import Link from "next/link"
 
 export const metadata = {
@@ -108,16 +109,12 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="h-[500px] bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/process-framework.svg" 
+              <ImageWithFallback
+                src="/TAVARI CONNECT - R.png"
                 alt="Creative Production Process Framework"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUQyRTQ0IiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI1MDAiIGN5PSIzMDAiIHI9IjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxRDJFNDRDIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMTQwIiB5MT0iMTQwIiB4Mj0iNDYwIiB5Mj0iMjYwIiBzdHJva2U9IiMxRDJFNDRDIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzFEMkU0NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPjAxPC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMzAwIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMUQyRTQ0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+MDQ8L3RleHQ+PC9zdmc+';
-                }}
               />
             </div>
           </div>

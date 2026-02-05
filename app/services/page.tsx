@@ -2,6 +2,7 @@ import { ArrowRight, Check, Target, Palette, Lightbulb, Camera, Users } from "lu
 import { Button } from "@/components/ui/button"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ImageWithFallback } from "@/components/ImageWithFallback"
 import Link from "next/link"
 
 export const metadata = {
@@ -86,16 +87,12 @@ export default function ServicesPage() {
               </ul>
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/strategy-framework.svg" 
+              <ImageWithFallback
+                src="/images/strategy-framework.svg"
                 alt="Strategic Framework Visualization"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0E1QTcxIi8+PHBhdGggZD0iTTEwMCAxMDBMMjAwIDIwMEwzMDAgMTAwTDEwMCAxMDBNNTAwIDEwMEw0MDAgMjAwTDUwMCAzMDBMNTAwIDEwME0yMDAgMzAwTDMwMCAyMDBMNDgwIDMwMEwyMDAgMzAwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==';
-                }}
               />
             </div>
           </div>
@@ -103,16 +100,12 @@ export default function ServicesPage() {
           {/* Brand Identity & Design */}
           <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
             <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/identity-design.svg" 
+              <ImageWithFallback
+                src="/images/identity-design.svg"
                 alt="Identity Design Showcase"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0E1QTcxIi8+PGNpcmNsZSBjeD0iMzAwIiBjeT0iMjAwIiByPSIxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBvbHlnb24gcG9pbnRzPSIyMDAsMTUwIDI1MCwxNTAgMjUwLDI1MCAyMDAsMjUwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI0MDAiIHkxPSIxNTAiIHgyPSI1MDAiIHkyPSIyNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+';
-                }}
               />
             </div>
             <div>
@@ -168,16 +161,12 @@ export default function ServicesPage() {
               </ul>
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/creative-campaign.svg" 
+              <ImageWithFallback
+                src="/images/creative-campaign.svg"
                 alt="Creative Campaign Showcase"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0E1QTcxIi8+PHBhdGggZD0iTTMwMCAxMDBDNDAwIDEwMCA0MDAgMzAwIDMwMCAzMDBDMjAwIDMwMCAyMDAgMTAwIDMwMCAxMDBNMjAwIDIwMEgzMDBNNDUwIDI1MEgzMDBNNDAwIDE1MEgzMDBNMjUwIDI1MEgzMDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PC9zdmc+';
-                }}
               />
             </div>
           </div>
@@ -185,16 +174,12 @@ export default function ServicesPage() {
           {/* Production House Services */}
           <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
             <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/production-capabilities.svg" 
+              <ImageWithFallback
+                src="/images/production-capabilities.svg"
                 alt="Production Capabilities"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0E1QTcxIi8+PHBhdGggZD0iTTIwMCAxNTBIMzAwIE0zMDAgMTUwVjM1MCBNMzAwIDM1MEgzNTAgTTY1MCAyNTBDNjUwIDM1MCA1NTAgMzUwIDU1MCAyNTAgTTU1MCAyNTBDNTUwIDE1MCA2NTAgMTUwIDY1MCAyNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+PGNpcmNsZSBjeD0iNDAwIiBjeT0iMjUwIiByPSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=';
-                }}
               />
             </div>
             <div>
@@ -250,16 +235,12 @@ export default function ServicesPage() {
               </ul>
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
-              <img 
-                src="/images/cultural-experience.svg" 
+              <ImageWithFallback
+                src="/images/cultural-experience.svg"
                 alt="Cultural Experience Design"
                 width={600}
                 height={400}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0E1QTcxIi8+PHBhdGggZD0iTTMwMCAxMDBNMTUwIDMwMEg0NTBNMzAwIDEwMEwyNTAgMzAwTTMwMCAxMDBNNDAwIDMwME0yNTAgMjUwTTQwMCAyNTBNMzUwIDMwME0yMDAgMzUwIE01MDAgMzUwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==';
-                }}
               />
             </div>
           </div>

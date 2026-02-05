@@ -3,6 +3,7 @@ import { ArrowRight, Target, Lightbulb, Palette } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ImageWithFallback } from "@/components/ImageWithFallback"
 
 export const metadata = {
   title: "Work — TAVARI",
@@ -35,16 +36,12 @@ export default function WorkPage() {
               </div>
               <h3 className="text-2xl font-light mb-4">Financial Services Rebrand</h3>
               <div className="h-48 bg-background rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                <img 
-                  src="/images/case-study-finance.svg" 
+                <ImageWithFallback
+                  src="/images/case-study-finance.svg"
                   alt="Financial Services Rebrand"
                   width={300}
                   height={200}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iNTAiIHk9IjUwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUQyRTQ0IiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSIxMDAiIHI9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxRDJFNDRDIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=';
-                  }}
                 />
               </div>
               <p className="text-muted-foreground font-body mb-6 leading-relaxed">
@@ -76,16 +73,12 @@ export default function WorkPage() {
               </div>
               <h3 className="text-2xl font-light mb-4">Tech Startup Positioning</h3>
               <div className="h-48 bg-background rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                <img 
-                  src="/images/case-study-tech.svg" 
+                <ImageWithFallback
+                  src="/images/case-study-tech.svg"
                   alt="Tech Startup Positioning"
                   width={300}
                   height={200}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTUwLDE1MEwxNTAsNTBMMjUwLDE1MEwxNTAsMjUwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxRDJFNDRDIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTUwLDUwTDE1MCwyNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFEMkU0NCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+';
-                  }}
                 />
               </div>
               <p className="text-muted-foreground font-body mb-6 leading-relaxed">
@@ -119,16 +112,12 @@ export default function WorkPage() {
               </div>
               <h3 className="text-2xl font-light mb-4">Cultural Institution Identity</h3>
               <div className="h-48 bg-background rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                <img 
-                  src="/images/case-study-cultural.svg" 
+                <ImageWithFallback
+                  src="/images/case-study-cultural.svg"
                   alt="Cultural Institution Identity"
                   width={300}
                   height={200}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUQyRTQ0IiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSIxMDAiIHI9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxRDJFNDRDIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=';
-                  }}
                 />
               </div>
               <p className="text-muted-foreground font-body mb-6 leading-relaxed">
@@ -160,16 +149,12 @@ export default function WorkPage() {
               </div>
               <h3 className="text-2xl font-light mb-4">Consumer Brand Campaign</h3>
               <div className="h-48 bg-background rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                <img 
-                  src="/images/case-study-consumer.svg" 
+                <ImageWithFallback
+                  src="/images/case-study-consumer.svg"
                   alt="Consumer Brand Campaign"
                   width={300}
                   height={200}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PHBvbHlnb24gcG9pbnRzPSI1MCwxMDAgMTUwLDUwIDI1MCwxMDAgMjUwLDE1MCAxNTAsMjAwIDUwLDE1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMUQyRTQ0IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=';
-                  }}
                 />
               </div>
               <p className="text-muted-foreground font-body mb-6 leading-relaxed">

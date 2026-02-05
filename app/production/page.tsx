@@ -3,6 +3,7 @@ import { ArrowRight, Camera, Palette, Video, FileImage, Package, Monitor } from 
 import { Button } from "@/components/ui/button"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ImageWithFallback } from "@/components/ImageWithFallback"
 
 export const metadata = {
   title: "Production — TAVARI",
@@ -147,16 +148,12 @@ export default function ProductionPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
-                <img 
-                  src="/images/brief-concept.svg" 
+                <ImageWithFallback
+                  src="/images/brief-concept.svg"
                   alt="Brief & Concept"
                   width={64}
                   height={64}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFEMkU0NCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4wMTwvdGV4dD48L3N2Zz4=';
-                  }}
                 />
               </div>
               <h3 className="text-lg font-light mb-4">Brief & Concept</h3>
@@ -167,16 +164,12 @@ export default function ProductionPage() {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
-                <img 
-                  src="/images/development.svg" 
+                <ImageWithFallback
+                  src="/images/development.svg"
                   alt="Development"
                   width={64}
                   height={64}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFEMkU0NCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4wMjwvdGV4dD48L3N2Zz4=';
-                  }}
                 />
               </div>
               <h3 className="text-lg font-light mb-4">Development</h3>
@@ -187,16 +180,12 @@ export default function ProductionPage() {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
-                <img 
-                  src="/images/execution.svg" 
+                <ImageWithFallback
+                  src="/images/execution.svg"
                   alt="Execution"
                   width={64}
                   height={64}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFEMkU0NCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4wMzwvdGV4dD48L3N2Zz4=';
-                  }}
                 />
               </div>
               <h3 className="text-lg font-light mb-4">Execution</h3>
@@ -207,16 +196,12 @@ export default function ProductionPage() {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden">
-                <img 
-                  src="/images/delivery.svg" 
+                <ImageWithFallback
+                  src="/images/delivery.svg"
                   alt="Delivery"
                   width={64}
                   height={64}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFEMkU0NCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4wNDwvdGV4dD48L3N2Zz4=';
-                  }}
                 />
               </div>
               <h3 className="text-lg font-light mb-4">Delivery</h3>
