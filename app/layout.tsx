@@ -1,41 +1,29 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Cormorant_Garamond, Inter } from "next/font/google"
+import { Montserrat, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const cormorantGaramond = Cormorant_Garamond({
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-heading",
 })
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-body",
 })
 
 export const metadata: Metadata = {
-  title: "TAVARI — Bespoke Menswear Rooted in African Artistry",
+  title: "TAVARI — Culture-Led Brand Strategy & Creative Production",
   description:
-    "Luxury bespoke menswear combining African craftsmanship with global tailoring standards. Custom garments crafted for discerning clients.",
+    "TAVARI helps organizations build meaningful, relevant, and enduring brands through strategy-first thinking and world-class creative production services.",
   generator: "v0.app",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+    icon: "/TAVARI CONNECT - R.png",
+    shortcut: "/TAVARI CONNECT - R.png",
+    apple: "/TAVARI CONNECT - R.png",
   },
 }
 
@@ -46,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorantGaramond.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${montserrat.variable} ${inter.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

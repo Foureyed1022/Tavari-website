@@ -8,19 +8,19 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <h3 className="text-2xl font-light tracking-wider mb-4">TAVARI</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed font-mono">
-              Bespoke menswear rooted in African artistry and global craftsmanship.
+            <p className="text-sm text-muted-foreground leading-relaxed font-body">
+              Culture-led brand strategy and creative production.
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h4 className="font-mono text-xs tracking-wider uppercase mb-4">Navigation</h4>
+            <h4 className="font-body text-xs tracking-wider uppercase mb-4">Navigation</h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
                   About
                 </Link>
@@ -28,25 +28,33 @@ export function Footer() {
               <li>
                 <Link
                   href="/services"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
                   Services
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/process"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  href="/production"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
-                  Process
+                  Production
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/lookbook"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  href="/work"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
-                  Lookbook
+                  Work
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+                >
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -54,43 +62,38 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="font-mono text-xs tracking-wider uppercase mb-4">Connect</h4>
+            <h4 className="font-body text-xs tracking-wider uppercase mb-4">Connect</h4>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/book"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  href="/contact"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
-                  Book Consultation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/collaborate"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
-                >
-                  Collaborate
+                  Work With Us
                 </Link>
               </li>
               <li>
                 <a
-                  href="mailto:hello@tavari.com"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  href="mailto:partnerships@tavari.com"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
-                  hello@tavari.com
+                  partnerships@tavari.com
                 </a>
+              </li>
+              <li>
+
               </li>
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h4 className="font-mono text-xs tracking-wider uppercase mb-4">Legal</h4>
+            <h4 className="font-body text-xs tracking-wider uppercase mb-4">Legal</h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/privacy"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
                   Privacy Policy
                 </Link>
@@ -98,7 +101,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-mono"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
                   Terms of Service
                 </Link>
@@ -108,7 +111,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-border">
-          <p className="text-sm text-muted-foreground text-center font-mono">
+          <p className="text-sm text-muted-foreground text-center font-body">
             © {new Date().getFullYear()} TAVARI. All rights reserved.
           </p>
         </div>

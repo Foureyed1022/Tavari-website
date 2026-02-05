@@ -3,7 +3,7 @@ import { Footer } from "@/components/footer"
 
 export const metadata = {
   title: "Terms of Service — TAVARI",
-  description: "TAVARI's terms of service for bespoke tailoring commissions.",
+  description: "Terms of service for TAVARI brand strategy and creative consultancy services.",
 }
 
 export default function TermsPage() {
@@ -11,73 +11,46 @@ export default function TermsPage() {
     <div className="min-h-screen">
       <Navigation />
 
-      <section className="py-32 px-6">
+      {/* Hero Section */}
+      <section className="relative min-h-[40vh] flex items-center justify-center pt-24 px-6">
+        <div className="relative z-10 text-center max-w-4xl">
+          <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-6">Terms of Service</h1>
+        </div>
+      </section>
+
+      {/* Terms Content */}
+      <section className="py-16 px-6">
         <div className="container mx-auto max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-light mb-8">Terms of Service</h1>
-          <p className="text-sm text-muted-foreground font-mono mb-16">Last Updated: December 2024</p>
+          <div className="prose prose-lg max-w-none">
+            <h2 className="text-2xl font-light mb-6">1. Services</h2>
+            <p className="text-muted-foreground font-body mb-8">
+              TAVARI provides brand strategy, identity design, creative strategy, production services, and related consulting services to organizations and institutions.
+            </p>
 
-          <div className="space-y-12 text-muted-foreground font-mono text-sm leading-relaxed">
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Bespoke Commission Terms</h2>
-              <p>
-                By commissioning a bespoke garment from TAVARI, you agree to these terms. All commissions require a
-                non-refundable 50% deposit at the time of consultation. The remaining balance is due upon final fitting
-                before garment delivery.
-              </p>
-            </div>
+            <h2 className="text-2xl font-light mb-6">2. Client Responsibilities</h2>
+            <p className="text-muted-foreground font-body mb-8">
+              Clients are responsible for providing accurate information, timely feedback, and necessary approvals throughout the project process.
+            </p>
 
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Timeline & Delivery</h2>
-              <p>
-                Standard bespoke commissions take 8-12 weeks from initial consultation to delivery. Rush services may be
-                available with additional fees. Timelines are estimates and may vary based on complexity and material
-                availability.
-              </p>
-            </div>
+            <h2 className="text-2xl font-light mb-6">3. Intellectual Property</h2>
+            <p className="text-muted-foreground font-body mb-8">
+              All work product remains the property of TAVARI until full payment is received. Upon payment, intellectual property rights transfer to the client as specified in the project agreement.
+            </p>
 
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Fittings & Alterations</h2>
-              <p>
-                Multiple fittings are included in the bespoke process. Minor alterations within 30 days of delivery are
-                complimentary. Alterations due to weight changes or other body modifications after final fitting may
-                incur additional charges.
-              </p>
-            </div>
+            <h2 className="text-2xl font-light mb-6">4. Confidentiality</h2>
+            <p className="text-muted-foreground font-body mb-8">
+              Both parties agree to maintain confidentiality of proprietary information shared during the engagement.
+            </p>
 
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Cancellations</h2>
-              <p>
-                Due to the custom nature of bespoke garments, cancellations after the initial deposit are not eligible
-                for refund. We reserve the right to cancel commissions and provide full refunds at our discretion.
-              </p>
-            </div>
+            <h2 className="text-2xl font-light mb-6">5. Limitation of Liability</h2>
+            <p className="text-muted-foreground font-body mb-8">
+              TAVARI's liability is limited to the total fees paid for the specific project. We are not liable for indirect, incidental, or consequential damages.
+            </p>
 
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Garment Care</h2>
-              <p>
-                All garments come with care instructions. TAVARI is not responsible for damage resulting from improper
-                care or unauthorized alterations by third parties.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Intellectual Property</h2>
-              <p>
-                All designs, patterns, and creative work produced by TAVARI remain our intellectual property. Clients
-                may not reproduce or commission replicas of TAVARI designs from other tailors.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-light text-foreground mb-4">Contact</h2>
-              <p>
-                For questions regarding these terms:
-                <br />
-                Email: hello@tavari.com
-                <br />
-                Address: TAVARI Atelier, 123 Craft Avenue, Lagos, Nigeria
-              </p>
-            </div>
+            <h2 className="text-2xl font-light mb-6">6. Governing Law</h2>
+            <p className="text-muted-foreground font-body">
+              These terms are governed by the laws of the jurisdiction where TAVARI operates, with disputes resolved through arbitration.
+            </p>
           </div>
         </div>
       </section>

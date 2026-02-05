@@ -9,45 +9,51 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-light tracking-wider">
-            TAVARI
+          <Link href="/" className="flex items-center">
+            <img 
+              src="/TAVARI CONNECT -White.png" 
+              alt="TAVARI" 
+              width={120} 
+              height={36}
+              className="h-9 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-12">
             <Link
               href="/about"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
             >
               About
             </Link>
             <Link
               href="/services"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
             >
               Services
             </Link>
             <Link
-              href="/process"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/production"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
             >
-              Process
+              Production
             </Link>
             <Link
-              href="/lookbook"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/work"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
             >
-              Lookbook
+              Work
             </Link>
             <Link
-              href="/collaborate"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/contact"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
             >
-              Collaborate
+              Contact
             </Link>
           </div>
 
@@ -56,9 +62,9 @@ export function Navigation() {
             <Button
               asChild
               variant="default"
-              className="rounded-none px-8 py-6 font-mono text-xs tracking-wider uppercase"
+              className="rounded-none px-8 py-6 font-body text-xs tracking-wider uppercase"
             >
-              <Link href="/book">Book Consultation</Link>
+              <Link href="/contact">Work With Us</Link>
             </Button>
           </div>
 
@@ -73,45 +79,45 @@ export function Navigation() {
           <div className="md:hidden pt-6 pb-4 flex flex-col gap-4">
             <Link
               href="/about"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link
               href="/services"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
               onClick={() => setIsMenuOpen(false)}
             >
               Services
             </Link>
             <Link
-              href="/process"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/production"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
               onClick={() => setIsMenuOpen(false)}
             >
-              Process
+              Production
             </Link>
             <Link
-              href="/lookbook"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/work"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
               onClick={() => setIsMenuOpen(false)}
             >
-              Lookbook
+              Work
             </Link>
             <Link
-              href="/collaborate"
-              className="text-sm tracking-wide hover:text-muted-foreground transition-colors font-mono uppercase"
+              href="/contact"
+              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
               onClick={() => setIsMenuOpen(false)}
             >
-              Collaborate
+              Contact
             </Link>
             <Button
               asChild
               variant="default"
-              className="rounded-none px-8 py-6 font-mono text-xs tracking-wider uppercase w-full"
+              className="rounded-none px-8 py-6 font-body text-xs tracking-wider uppercase w-full"
             >
-              <Link href="/book">Book Consultation</Link>
+              <Link href="/contact">Work With Us</Link>
             </Button>
           </div>
         )}
