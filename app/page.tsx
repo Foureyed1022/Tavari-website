@@ -27,7 +27,7 @@ export default function HomePage() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src="/Ta.mp4" type="video/mp4" />
+            <source src="/ta.mp4" type="video/mp4" />
           </video>
           {/* Overlay for readability */}
           <div className="absolute inset-0 bg-background/80" />
