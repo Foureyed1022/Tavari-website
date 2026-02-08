@@ -7,7 +7,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <h3 className="text-2xl font-light tracking-wider mb-4">TAVARI</h3>
+            <Link href="/" className="inline-block mb-6">
+              <img
+                src="/TAVARI CONNECT -White.png"
+                alt="TAVARI"
+                width={180}
+                height={54}
+                className="h-12 w-auto"
+              />
+            </Link>
             <p className="text-sm text-muted-foreground leading-relaxed font-body">
               Culture-led brand strategy and creative production.
             </p>
@@ -81,7 +89,9 @@ export function Footer() {
                 </a>
               </li>
               <li>
-
+                <span className="text-sm text-muted-foreground font-body block mt-2">
+                  Lilongwe, Malawi
+                </span>
               </li>
             </ul>
           </div>

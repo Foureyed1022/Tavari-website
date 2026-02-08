@@ -9,17 +9,17 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-6 py-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      <div className="container mx-auto px-6 py-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img 
-              src="/TAVARI CONNECT -White.png" 
-              alt="TAVARI" 
-              width={120} 
-              height={36}
-              className="h-9 w-auto"
+            <img
+              src="/TAVARI CONNECT -White.png"
+              alt="TAVARI"
+              width={240}
+              height={72}
+              className="h-20 w-auto"
             />
           </Link>
 

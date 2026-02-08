@@ -17,10 +17,10 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    
+
     setIsSubmitting(false)
     setIsSubmitted(true)
   }
@@ -76,34 +76,34 @@ export default function ContactPage() {
                 <Mail className="h-8 w-8 text-foreground" />
               </div>
               <h3 className="text-xl font-light mb-4">Email</h3>
-              <a 
-                href="mailto:partnerships@tavari.com" 
+              <a
+                href="mailto:partnerships@tavari.com"
                 className="text-muted-foreground font-body hover:text-foreground transition-colors"
               >
                 partnerships@tavari.com
               </a>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6">
                 <Phone className="h-8 w-8 text-foreground" />
               </div>
               <h3 className="text-xl font-light mb-4">Phone</h3>
-              <a 
-                href="tel:+1234567890" 
+              <a
+                href="tel:+1234567890"
                 className="text-muted-foreground font-body hover:text-foreground transition-colors"
               >
                 +1 (234) 567-8900
               </a>
             </div>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6">
                 <MapPin className="h-8 w-8 text-foreground" />
               </div>
               <h3 className="text-xl font-light mb-4">Location</h3>
               <p className="text-muted-foreground font-body">
-                Lagos, Nigeria<br />
+                Lilongwe, Malawi<br />
                 Global Partnerships Welcome
               </p>
             </div>
@@ -119,64 +119,64 @@ export default function ContactPage() {
             <p className="text-muted-foreground font-body text-center mb-12 max-w-2xl mx-auto">
               Tell us about your organization and brand challenges. We'll respond within 2 business days to discuss how we can help.
             </p>
-            
+
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Organization Information */}
               <div className="space-y-6">
                 <h3 className="text-xl font-light border-b border-border pb-4">Organization Details</h3>
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="organization" className="font-body text-xs uppercase tracking-wide">
                       <Building className="inline h-4 w-4 mr-2" />
                       Organization Name *
                     </Label>
-                    <Input 
-                      id="organization" 
-                      required 
-                      className="rounded-none border-2 h-12 font-body" 
+                    <Input
+                      id="organization"
+                      required
+                      className="rounded-none border-2 h-12 font-body"
                       placeholder="Your company or institution name"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="contactName" className="font-body text-xs uppercase tracking-wide">
                       <User className="inline h-4 w-4 mr-2" />
                       Contact Name *
                     </Label>
-                    <Input 
-                      id="contactName" 
-                      required 
-                      className="rounded-none border-2 h-12 font-body" 
+                    <Input
+                      id="contactName"
+                      required
+                      className="rounded-none border-2 h-12 font-body"
                       placeholder="Full name"
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="email" className="font-body text-xs uppercase tracking-wide">
                       <Mail className="inline h-4 w-4 mr-2" />
                       Email Address *
                     </Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      required 
-                      className="rounded-none border-2 h-12 font-body" 
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      className="rounded-none border-2 h-12 font-body"
                       placeholder="business@organization.com"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="font-body text-xs uppercase tracking-wide">
                       <Phone className="inline h-4 w-4 mr-2" />
                       Phone Number
                     </Label>
-                    <Input 
-                      id="phone" 
-                      type="tel" 
-                      className="rounded-none border-2 h-12 font-body" 
+                    <Input
+                      id="phone"
+                      type="tel"
+                      className="rounded-none border-2 h-12 font-body"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -186,7 +186,7 @@ export default function ContactPage() {
               {/* Project Information */}
               <div className="space-y-6">
                 <h3 className="text-xl font-light border-b border-border pb-4">Project Overview</h3>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="projectType" className="font-body text-xs uppercase tracking-wide">
                     Project Type *
@@ -205,7 +205,7 @@ export default function ContactPage() {
                     <option value="other">Other Brand Initiative</option>
                   </select>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="timeline" className="font-body text-xs uppercase tracking-wide">
                     Project Timeline
@@ -222,7 +222,7 @@ export default function ContactPage() {
                     <option value="exploring">Just exploring options</option>
                   </select>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="budget" className="font-body text-xs uppercase tracking-wide">
                     Budget Range (Optional)
@@ -244,7 +244,7 @@ export default function ContactPage() {
               {/* Message */}
               <div className="space-y-6">
                 <h3 className="text-xl font-light border-b border-border pb-4">Your Message</h3>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="message" className="font-body text-xs uppercase tracking-wide">
                     <MessageSquare className="inline h-4 w-4 mr-2" />

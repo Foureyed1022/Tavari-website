@@ -4,85 +4,114 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* TAVARI Color Palette */
-  --color-primary: #ffffff; /* White primary */
-  --color-primary-foreground: #1B2E44; /* Dark blue-gray for contrast */
-  
+  /* TAVARI Color Palette - Refined for Visibility & Depth */
+  --color-primary: #ffffff;
+  --color-primary-foreground: #0F172A;
+  /* Richer dark for contrast */
+
   /* Background and surface colors */
-  --background: #1B2E44; /* Primary background: Blue-gray */
-  --foreground: #ffffff; /* White for contrast */
-  --card: #334155; /* Darker blue-gray for cards */
-  --card-foreground: #ffffff;
-  --popover: #334155; /* Darker blue-gray for popovers */
-  --popover-foreground: #ffffff;
-  
+  --background: #0F172A;
+  /* Deep rich navy/slate (Slate 900) - Stronger base */
+  --foreground: #F1F5F9;
+  /* Slate 100 - Crisp text */
+
+  /* Surface colors */
+  --card: #1E293B;
+  /* Slate 800 - Distinct card layer */
+  --card-foreground: #F1F5F9;
+
+  --popover: #1E293B;
+  --popover-foreground: #F1F5F9;
+
   /* Secondary colors */
-  --secondary: #1B2E44; /* Blue-gray secondary */
+  --secondary: #334155;
+  /* Slate 700 - Visible secondary elements */
   --secondary-foreground: #ffffff;
-  
+
   /* Muted tones */
-  --muted: #f1f5f9; /* Soft gray-blue */
-  --muted-foreground: #64748b; /* Muted blue-gray */
-  
-  /* Accent colors (derived from palette harmony) */
-  --accent: #cbd5e1; /* Medium blue-gray */
-  --accent-foreground: #1B2E44;
-  
-  /* Destructive colors */
-  --destructive: #ef4444; /* Red */
+  --muted: #1E293B;
+  /* Matches card for cohesive "off-background" areas */
+  --muted-foreground: #94A3B8;
+  /* Slate 400 - Readable but distinct from primary text */
+
+  /* Accent colors */
+  --accent: #334155;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  
+
   /* Borders and inputs */
-  --border: #e2e8f0; /* Light blue-gray */
-  --input: #e2e8f0;
-  --ring: #1B2E44; /* Match primary */
-  
+  --border: #334155;
+  /* Slate 700 - Visible borders */
+  --input: #334155;
+  --ring: #94A3B8;
+
   /* Chart colors */
-  --chart-1: #1B2E44; /* Primary */
-  --chart-2: #334155; /* Darker shade */
-  --chart-3: #475569; /* Medium shade */
-  --chart-4: #94a3b8; /* Lighter shade */
-  --chart-5: #cbd5e1; /* Lightest shade */
-  
+  --chart-1: #38BDF8;
+  --chart-2: #818CF8;
+  --chart-3: #A78BFA;
+  --chart-4: #F472B6;
+  --chart-5: #FB7185;
+
   --radius: 0rem;
-  
+
   /* Sidebar colors */
-  --sidebar: #1B2E44;
-  --sidebar-foreground: #ffffff;
+  --sidebar: #0F172A;
+  --sidebar-foreground: #F1F5F9;
   --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #1B2E44;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #1B2E44;
+  --sidebar-primary-foreground: #0F172A;
+  --sidebar-accent: #1E293B;
+  --sidebar-accent-foreground: #F1F5F9;
+  --sidebar-border: #334155;
+  --sidebar-ring: #94A3B8;
 }
 
 .dark {
   /* TAVARI Dark Theme Colors */
-  --background: #0f172a; /* Darker blue-gray background */
-  --foreground: #e2e8f0; /* Light blue-gray */
-  --card: #1e293b; /* Medium blue-gray */
+  --background: #0f172a;
+  /* Darker blue-gray background */
+  --foreground: #e2e8f0;
+  /* Light blue-gray */
+  --card: #1e293b;
+  /* Medium blue-gray */
   --card-foreground: #e2e8f0;
-  --popover: #1e293b; /* Medium blue-gray */
+  --popover: #1e293b;
+  /* Medium blue-gray */
   --popover-foreground: #e2e8f0;
-  --primary: #ffffff; /* White primary */
-  --primary-foreground: #0f172a; /* Dark background */
-  --secondary: #1B2E44; /* Blue-gray secondary */
+  --primary: #ffffff;
+  /* White primary */
+  --primary-foreground: #0f172a;
+  /* Dark background */
+  --secondary: #1B2E44;
+  /* Blue-gray secondary */
   --secondary-foreground: #ffffff;
-  --muted: #334155; /* Dark blue-gray */
-  --muted-foreground: #94a3b8; /* Lighter blue-gray */
-  --accent: #475569; /* Medium-dark blue-gray */
+  --muted: #334155;
+  /* Dark blue-gray */
+  --muted-foreground: #94a3b8;
+  /* Lighter blue-gray */
+  --accent: #475569;
+  /* Medium-dark blue-gray */
   --accent-foreground: #e2e8f0;
-  --destructive: #ef4444; /* Red */
+  --destructive: #ef4444;
+  /* Red */
   --destructive-foreground: #ffffff;
-  --border: #334155; /* Dark blue-gray */
+  --border: #334155;
+  /* Dark blue-gray */
   --input: #334155;
-  --ring: #94a3b8; /* Lighter blue-gray */
-  --chart-1: #cbd5e1; /* Light */
-  --chart-2: #94a3b8; /* Medium-light */
-  --chart-3: #64748b; /* Medium */
-  --chart-4: #334155; /* Medium-dark */
-  --chart-5: #1e293b; /* Dark */
+  --ring: #94a3b8;
+  /* Lighter blue-gray */
+  --chart-1: #cbd5e1;
+  /* Light */
+  --chart-2: #94a3b8;
+  /* Medium-light */
+  --chart-3: #64748b;
+  /* Medium */
+  --chart-4: #334155;
+  /* Medium-dark */
+  --chart-5: #1e293b;
+  /* Dark */
   --sidebar: #0f172a;
   --sidebar-foreground: #e2e8f0;
   --sidebar-primary: #ffffff;
@@ -102,7 +131,8 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--color-primary); /* Using new TAVARI primary */
+  --color-primary: var(--color-primary);
+  /* Using new TAVARI primary */
   --color-primary-foreground: var(--color-primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -138,11 +168,52 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-body;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-sheen {
+    background: linear-gradient(120deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 40%,
+        rgba(255, 255, 255, 0.1) 60%,
+        transparent 70%);
+    background-size: 200% 100%;
+    animation: sheen 8s infinite linear;
+  }
+
+  @keyframes sheen {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
   }
 }
