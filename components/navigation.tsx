@@ -14,8 +14,8 @@ export function Navigation() {
   return (
     <nav
       className={`z-50 transition-all duration-300 ${isHome
-          ? "absolute top-0 left-0 right-0 bg-transparent py-6"
-          : "relative bg-background border-b border-border/20 py-4 shadow-sm"
+        ? "absolute top-0 left-0 right-0 bg-transparent py-6"
+        : "relative bg-background border-b border-border/20 py-4 shadow-sm"
         }`}
     >
       <div className="container mx-auto px-6">
@@ -65,8 +65,15 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-none px-6 py-6 font-body text-xs tracking-wider uppercase border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              <Link href="/login">Dashboard</Link>
+            </Button>
             <Button
               asChild
               variant="default"
@@ -120,6 +127,14 @@ export function Navigation() {
             >
               Contact
             </Link>
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-none px-6 py-6 font-body text-xs tracking-wider uppercase border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Link href="/login">Dashboard</Link>
+            </Button>
             <Button
               asChild
               variant="default"
