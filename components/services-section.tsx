@@ -8,45 +8,59 @@ import { ImageWithFallback } from "@/components/ImageWithFallback"
 export function ServicesSection() {
     const services = [
         {
-            title: "Brand Strategy",
-            description: "Naming, positioning, and planning to help your business grow.",
-            gradient: "from-muted to-muted/50",
+            title: "Brand Strategy & Marketing",
+            description: "Brand development, positioning, and identity design for impactful market presence.",
+            deliverables: ["Brand toolkits", "Strategy decks", "Campaign plans"],
+            gradient: "from-slate-900 to-slate-800",
             border: "border-r border-b",
         },
         {
-            title: "Brand Identity",
-            description: "Logos, colors, fonts, and design systems that bring your story to life.",
-            gradient: "from-muted to-muted/50", // Adjusted for variation ideally
+            title: "Creative Design & Content",
+            description: "Visual storytelling through graphic design, copywriting, and motion graphics.",
+            deliverables: ["Marketing collateral", "Digital assets", "Creative packs"],
+            gradient: "from-zinc-900 to-zinc-800",
             border: "border-r border-b",
         },
         {
-            title: "Creative Vision",
-            description: "Campaigns and content that get people talking and engaging with you.",
-            gradient: "from-muted to-muted/50",
+            title: "Audio-Visual Production",
+            description: "High-end commercials, documentaries, photography, and event coverage.",
+            deliverables: ["TVCs & Films", "Edited videos", "Photo libraries"],
+            gradient: "from-neutral-900 to-neutral-800",
             border: "border-b",
         },
         {
-            title: "Production",
-            description: "Full-service production for photos, videos, and digital assets.",
-            gradient: "from-muted to-muted/50",
-            border: "border-r",
+            title: "Digital Marketing & Media",
+            description: "Comprehensive social media, digital advertising, and influencer management.",
+            deliverables: ["Content calendars", "Ad reports", "Influencer packages"],
+            gradient: "from-stone-900 to-stone-800",
+            border: "border-r border-b",
         },
         {
-            title: "Culture",
-            description: "Creating moments and content that build real connections.",
-            gradient: "from-muted to-muted/50",
-            border: "border-r",
+            title: "PR & Communications",
+            description: "Media relations, reputation management, and strategic press monitoring.",
+            deliverables: ["Press kits", "Media reports", "PR summaries"],
+            gradient: "from-slate-950 to-slate-900",
+            border: "border-r border-b",
         },
         {
-            title: "Events",
-            description: "We plan and deliver well-designed events and experiences that bring people, brands, and ideas together.",
-            gradient: "from-muted to-muted/50",
+            title: "Events & Activations",
+            description: "Memorable brand experiences, product launches, and cultural event execution.",
+            deliverables: ["Concepts", "Activation toolkits", "Recap reports"],
+            gradient: "from-zinc-950 to-zinc-900",
             border: "border-b",
         },
         {
-            title: "Merchandise (Apparel)",
-            description: "We design and produce apparel and branded merchandise that reflects identity, culture, and purpose.",
-            gradient: "from-muted to-muted/50",
+            title: "Talent Management",
+            description: "Coordinating influencers, brand ambassadors, and creative talent for campaigns.",
+            deliverables: ["Talent portfolios", "Engagement reports"],
+            gradient: "from-neutral-950 to-neutral-900",
+            border: "border-r",
+        },
+        {
+            title: "Consultancy & Research",
+            description: "Market research, campaign evaluation, and creative skills training.",
+            deliverables: ["Training manuals", "Research reports", "Assessments"],
+            gradient: "from-stone-950 to-stone-900",
             border: "border-r",
         }
     ]
@@ -74,15 +88,22 @@ export function ServicesSection() {
 
                                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                                     <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                        <h3 className="text-2xl font-light text-white mb-3">{service.title}</h3>
-                                        <p className="text-white/80 font-body text-sm leading-relaxed mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                                        <h3 className="text-xl font-light text-white mb-2 leading-tight">{service.title}</h3>
+                                        <p className="text-white/70 font-body text-xs leading-relaxed mb-4 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                                             {service.description}
                                         </p>
+                                        <div className="flex flex-wrap gap-2 mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                                            {service.deliverables?.map(d => (
+                                                <span key={d} className="text-[10px] uppercase tracking-widest text-white/50 border border-white/20 px-2 py-1 rounded-sm bg-white/5">
+                                                    {d}
+                                                </span>
+                                            ))}
+                                        </div>
                                         <Link
                                             href="/services"
-                                            className="inline-flex items-center gap-2 text-sm font-body uppercase tracking-wide text-white hover:text-white/80 transition-colors"
+                                            className="inline-flex items-center gap-2 text-[10px] font-body uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
                                         >
-                                            Learn More <ArrowRight className="h-4 w-4" />
+                                            Inquire <ArrowRight className="h-3 w-3" />
                                         </Link>
                                     </div>
                                 </div>

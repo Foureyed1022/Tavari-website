@@ -53,12 +53,14 @@ export function HeroSection() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 <motion.h1
-                    className="text-5xl md:text-7xl font-light tracking-tight mb-8 leading-tight"
+                    className="text-5xl md:text-8xl font-light tracking-tight mb-8 leading-tight italic"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.5 }}
                 >
-                    Building Brands <br className="hidden md:block" /> for the Bold.
+                    Creative. <br className="md:hidden" />
+                    Strategic. <br className="md:hidden" />
+                    Impact-Driven.
                 </motion.h1>
 
                 <motion.p
@@ -67,7 +69,7 @@ export function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                 >
-                    We work with organizations, businesses, and individuals to build meaningful brands through clear strategy and world-class creative production.
+                    Tavari is a full-service marketing and production house offering end-to-end creative, communication, and production solutions for brands, institutions, and development partners.
                 </motion.p>
 
                 <motion.div

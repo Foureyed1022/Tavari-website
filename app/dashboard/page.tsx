@@ -1,79 +1,88 @@
-import { ArrowUpRight, Clock, AlertCircle, CheckCircle2, MoreHorizontal } from "lucide-react"
+"use client"
+
+import { useState, useEffect } from "react"
+import { ArrowUpRight, Clock, AlertCircle, CheckCircle2, MoreHorizontal, Loader2, Users, DollarSign } from "lucide-react"
 import { ImageWithFallback } from "@/components/ImageWithFallback"
-
-// Mock Data for Dashboard
-const stats = [
-    { label: "Active Projects", value: "12", trend: "+2 this month", icon: Clock, color: "text-blue-400" },
-    { label: "Due This Week", value: "4", trend: "Urgent", icon: AlertCircle, color: "text-amber-400" },
-    { label: "Completed (YTD)", value: "28", trend: "98% satisfaction", icon: CheckCircle2, color: "text-emerald-400" },
-]
-
-const recentProjects = [
-    {
-        id: "PROJ-24-001",
-        client: "Nebula Tech",
-        project: "Rebrand & Website",
-        lead: "Godfrey Kambewa",
-        status: "Production",
-        deadline: "Feb 15, 2026",
-        progress: 65,
-        budget: 12000000,
-        spent: 8500000,
-    },
-    {
-        id: "PROJ-24-005",
-        client: "Malawi Tourism",
-        project: "Destination Campaign",
-        lead: "Lumbani Phiri",
-        status: "Review",
-        deadline: "Feb 12, 2026",
-        progress: 90,
-        budget: 25000000,
-        spent: 22100000,
-    },
-    {
-        id: "PROJ-24-003",
-        client: "Urban Culture Festival",
-        project: "Event Branding & Merch",
-        lead: "Ishmael Assan",
-        status: "Discovery",
-        deadline: "Mar 01, 2026",
-        progress: 15,
-        budget: 8500000,
-        spent: 1200000,
-    },
-    {
-        id: "PROJ-24-008",
-        client: "Horizon Finance",
-        project: "Corporate Strategy",
-        lead: "Godfrey Kambewa",
-        status: "Delivered",
-        deadline: "Feb 05, 2026",
-        progress: 100,
-        budget: 15000000,
-        spent: 14800000,
-    },
-    {
-        id: "PROJ-24-012",
-        client: "EcoSolutions",
-        project: "Sustainability Report",
-        lead: "Martinez Chakwawa",
-        status: "Planning",
-        deadline: "Feb 28, 2026",
-        progress: 5,
-        budget: 5000000,
-        spent: 0,
-    },
-]
+import { useAuth } from "@/contexts/AuthContext"
+import { AnalyticsHub } from "@/components/dashboard/analytics-hub"
+import { db } from "@/lib/firebase"
+import { collection, onSnapshot, query, where, limit, orderBy, updateDoc, doc, serverTimestamp } from "firebase/firestore"
+import { toast } from "sonner"
 
 export default function DashboardPage() {
+    const { user } = useAuth()
+    const firstName = user?.displayName ? user.displayName.split(' ')[0] : "Team"
+
+    const [stats, setStats] = useState([
+        { label: "Active Projects", value: "...", trend: "Live", icon: Clock, color: "text-blue-400" },
+        { label: "Team Members", value: "...", trend: "Online", icon: Users, color: "text-amber-400" },
+        { label: "Fund Requests", value: "...", trend: "Pending", icon: DollarSign, color: "text-emerald-400" },
+    ])
+    const [recentProjects, setRecentProjects] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        // 1. Projects Count & Recent List
+        const qRecent = query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(5))
+        const unsubProjects = onSnapshot(collection(db, "projects"), (snapshot) => {
+            setStats(prev => prev.map(s => s.label === "Active Projects" ? { ...s, value: snapshot.size.toString() } : s))
+            setLoading(false)
+        })
+
+        const unsubRecent = onSnapshot(qRecent, (snapshot) => {
+            const projs: any[] = []
+            snapshot.forEach(doc => {
+                const data = doc.data()
+                projs.push({
+                    id: doc.id,
+                    ...data,
+                    progress: Math.min(Math.floor(((data.spent || 0) / (data.budget || 1)) * 100), 100)
+                })
+            })
+            setRecentProjects(projs)
+        })
+
+        // 2. Presence Count
+        const unsubPresence = onSnapshot(query(collection(db, "presence"), where("status", "==", "online")), (snapshot) => {
+            const count = snapshot.size
+            setStats(prev => prev.map(s => s.label === "Team Members" ? { ...s, value: count.toString() } : s))
+        })
+
+        // 3. Pending Requests
+        const unsubRequests = onSnapshot(query(collection(db, "fund_requests"), where("status", "==", "pending")), (snapshot) => {
+            const count = snapshot.size
+            setStats(prev => prev.map(s => s.label === "Fund Requests" ? { ...s, value: count.toString() } : s))
+        })
+
+        return () => {
+            unsubProjects()
+            unsubRecent()
+            unsubPresence()
+            unsubRequests()
+        }
+    }, [])
+
+    const PROJECT_STATUSES = ["Discovery", "Planning", "Production", "Review", "Delivered"]
+
+    const handleUpdateStatus = async (projectId: string, newStatus: string) => {
+        try {
+            await updateDoc(doc(db, "projects", projectId), {
+                status: newStatus,
+                updatedAt: serverTimestamp()
+            })
+            toast.success("Status updated")
+        } catch (e) {
+            toast.error("Update failed")
+        }
+    }
+
     return (
         <div className="space-y-8">
             {/* Page Title */}
             <div>
                 <h2 className="text-3xl font-light tracking-tight">Operations Overview</h2>
                 <p className="text-muted-foreground text-sm font-body mt-1">
-                    Welcome back, Godfrey. Here's what's happening at Tavari today.
+                    Welcome back, {firstName}. Here's what's happening at Tavari today.
                 </p>
             </div>
 
@@ -92,6 +101,9 @@ export default function DashboardPage() {
                     </div>
                 ))}
             </div>
+
+            {/* Analytics Hub */}
+            <AnalyticsHub />
 
             {/* Recent Activity / Projects */}
             <div className="bg-card border border-border/50 rounded-lg shadow-sm">
@@ -124,9 +136,9 @@ export default function DashboardPage() {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
                                             <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] text-primary-foreground font-bold">
-                                                {project.lead.split(' ').map(n => n[0]).join('')}
+                                                {project.lead?.split(' ').map((n: string) => n[0]).join('') || '?'}
                                             </div>
-                                            <span className="text-muted-foreground">{project.lead.split(' ')[0]}</span>
+                                            <span className="text-muted-foreground">{project.lead?.split(' ')[0] || 'Unassigned'}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
@@ -154,7 +166,20 @@ export default function DashboardPage() {
                                         {project.deadline}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <StatusBadge status={project.status} />
+                                        <select
+                                            className="bg-transparent border-none p-0 text-xs font-medium focus:ring-0 cursor-pointer hover:underline"
+                                            value={project.status}
+                                            onChange={(e) => handleUpdateStatus(project.id, e.target.value)}
+                                        >
+                                            {PROJECT_STATUSES.map(status => (
+                                                <option key={status} value={status} className="bg-card text-foreground">
+                                                    {status}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="mt-1">
+                                            <StatusBadge status={project.status} />
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <button className="text-muted-foreground hover:text-foreground">

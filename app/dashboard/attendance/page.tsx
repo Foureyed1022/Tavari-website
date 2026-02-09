@@ -1,19 +1,109 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Play, Square, Plus, CheckCircle2, Clock, FileText, Send } from "lucide-react"
+import { Play, Square, Plus, CheckCircle2, Clock, FileText, Send, Loader2 } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import { db } from "@/lib/firebase"
+import {
+    collection,
+    addDoc,
+    query,
+    where,
+    onSnapshot,
+    serverTimestamp,
+    getDocs,
+    setDoc,
+    doc,
+    getDoc,
+    updateDoc,
+    deleteDoc,
+    orderBy
+} from "firebase/firestore"
+import { toast } from "sonner"
+import { DEPARTMENTS } from "@/lib/constants"
 
 export default function AttendancePage() {
+    const { user } = useAuth()
     const [isClockedIn, setIsClockedIn] = useState(false)
     const [elapsedTime, setElapsedTime] = useState(0)
-    const [activities, setActivities] = useState([
-        { time: "09:00 AM", task: "Clocked In", type: "system" },
-        { time: "09:15 AM", task: "Daily Standup Meeting", type: "work" },
-        { time: "10:30 AM", task: "Reviewing Nebula Tech designs", type: "work" },
-    ])
+    const [activities, setActivities] = useState<any[]>([])
     const [newTask, setNewTask] = useState("")
+    const [loading, setLoading] = useState(true)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [eodReport, setEodReport] = useState("")
+    const [userProfile, setUserProfile] = useState<any>(null)
 
-    // Mock Timer Effect
+    const [projects, setProjects] = useState<any[]>([])
+
+    // Load Data & Sync
+    useEffect(() => {
+        if (!user) return
+
+        const today = new Date().toISOString().split('T')[0]
+
+        // 1. Sync Session
+        const sessionRef = doc(db, "sessions", user.uid)
+        getDoc(sessionRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data()
+                if (data.status === "active") {
+                    setIsClockedIn(true)
+                    setSelectedDept(data.department || "")
+                    setSelectedProject(data.project)
+                    setCurrentSessionProject(data.project)
+
+                    const startTime = data.startTime.toDate().getTime()
+                    const now = Date.now()
+                    setElapsedTime(Math.floor((now - startTime) / 1000))
+                }
+            }
+        })
+
+        // 2. Sync Activities
+        const q = query(
+            collection(db, "activities"),
+            where("userId", "==", user.uid),
+            where("date", "==", today)
+        )
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const acts: any[] = []
+            snapshot.forEach((doc) => {
+                acts.push({ id: doc.id, ...doc.data() })
+            })
+
+            // Sort client-side to avoid needing a composite index
+            acts.sort((a, b) => {
+                const timeA = a.timestamp?.seconds || 0
+                const timeB = b.timestamp?.seconds || 0
+                return timeB - timeA
+            })
+
+            setActivities(acts)
+            setLoading(false)
+        })
+
+        // 3. Fetch Projects
+        const fetchProjects = async () => {
+            const qProj = query(collection(db, "projects"), orderBy("createdAt", "desc"))
+            const snap = await getDocs(qProj)
+            setProjects(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+        }
+        fetchProjects()
+
+        // 4. Fetch User Profile
+        const unsubscribeProfile = onSnapshot(doc(db, "profiles", user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                setUserProfile(docSnap.data())
+            }
+        })
+
+        return () => {
+            unsubscribe()
+            unsubscribeProfile()
+        }
+    }, [user])
+
     useEffect(() => {
         let interval: NodeJS.Timeout
         if (isClockedIn) {
@@ -32,51 +122,139 @@ export default function AttendancePage() {
     }
 
     const [selectedDept, setSelectedDept] = useState("")
-    const [selectedProject, setSelectedProject] = useState("")
+    const [workMode, setWorkMode] = useState<'general' | 'project'>('general')
+    const [selectedProject, setSelectedProject] = useState("General / Agency Work")
     const [currentSessionProject, setCurrentSessionProject] = useState("")
 
-    const departments = [
-        { id: "strategy", name: "Strategy" },
-        { id: "design", name: "Identity & Design" },
-        { id: "campaigns", name: "Campaigns" },
-        { id: "production", name: "Production" },
-        { id: "events", name: "Events" },
-        { id: "merch", name: "Merchandise" },
-    ]
-
-    const allProjects = [
-        { id: "PROJ-24-001", client: "Nebula Tech", project: "Rebrand & Website", department: "strategy" },
-        { id: "PROJ-24-005", client: "Malawi Tourism", project: "Destination Campaign", department: "campaigns" },
-        { id: "PROJ-24-003", client: "Urban Culture Festival", project: "Event Branding & Merch", department: "events" },
-        { id: "PROJ-24-008", client: "Horizon Finance", project: "Corporate Strategy", department: "strategy" },
-        { id: "PROJ-24-012", client: "EcoSolutions", project: "Sustainability Report", department: "design" },
-        { id: "PROJ-24-015", client: "Tavari Merch Drop 1", project: "Apparel Collection", department: "merch" },
-        { id: "PROJ-24-018", client: "Music Video: 'Roots'", project: "Video Production", department: "production" },
-    ]
+    const departments = DEPARTMENTS
 
     const availableProjects = selectedDept
-        ? allProjects.filter(p => p.department === selectedDept || (selectedDept === 'events' && p.department === 'merch'))
+        ? projects.filter(p => p.department === selectedDept)
         : []
 
-    const handleClockIn = () => {
-        if (!selectedDept || !selectedProject) return
-        setIsClockedIn(true)
-        setCurrentSessionProject(selectedProject)
-        setActivities(prev => [{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), task: `Clocked In: ${selectedProject}`, type: "system" }, ...prev])
+    const handleClockIn = async () => {
+        if (!user) return
+
+        try {
+            const sessionRef = doc(db, "sessions", user.uid)
+            const projectToSave = workMode === 'project' ? selectedProject : "General / Agency Work"
+            const deptToSave = workMode === 'project' ? selectedDept : (userProfile?.department || "Unassigned")
+
+            await setDoc(sessionRef, {
+                userId: user.uid,
+                status: "active",
+                startTime: serverTimestamp(),
+                project: projectToSave,
+                department: deptToSave,
+                workMode: workMode
+            })
+
+            // Update Presence
+            await setDoc(doc(db, "presence", user.uid), {
+                name: user.displayName || user.email,
+                status: "online",
+                project: projectToSave,
+                workMode: workMode,
+                lastSeen: serverTimestamp()
+            })
+
+            setIsClockedIn(true)
+            setCurrentSessionProject(projectToSave)
+
+            await addDoc(collection(db, "activities"), {
+                userId: user.uid,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                task: `Clocked In: ${projectToSave} (${workMode})`,
+                type: "system"
+            })
+
+            toast.success("Clocked in successfully")
+        } catch (error) {
+            console.error("Clock in error:", error)
+            toast.error("Failed to clock in")
+        }
     }
 
-    const handleClockOut = () => {
-        setIsClockedIn(false)
-        setSelectedDept("")
-        setSelectedProject("")
-        setCurrentSessionProject("")
-        setActivities(prev => [{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), task: "Clocked Out", type: "system" }, ...prev])
+    const handleClockOut = async () => {
+        if (!user) return
+
+        try {
+            const sessionRef = doc(db, "sessions", user.uid)
+            await updateDoc(sessionRef, {
+                status: "inactive",
+                endTime: serverTimestamp()
+            })
+
+            // Update Presence
+            await setDoc(doc(db, "presence", user.uid), {
+                name: user.displayName || user.email,
+                status: "offline",
+                lastSeen: serverTimestamp()
+            })
+
+            setIsClockedIn(false)
+            setCurrentSessionProject("")
+            setElapsedTime(0)
+
+            await addDoc(collection(db, "activities"), {
+                userId: user.uid,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                task: "Clocked Out",
+                type: "system"
+            })
+
+            toast.success("Clocked out successfully")
+        } catch (error) {
+            console.error("Clock out error:", error)
+            toast.error("Failed to clock out")
+        }
     }
 
-    const handleAddTask = () => {
-        if (!newTask.trim()) return
-        setActivities(prev => [{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), task: newTask, type: "work" }, ...prev])
-        setNewTask("")
+    const handleAddTask = async () => {
+        if (!user || !newTask.trim()) return
+
+        try {
+            await addDoc(collection(db, "activities"), {
+                userId: user.uid,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                task: newTask,
+                type: "work"
+            })
+            setNewTask("")
+        } catch (error) {
+            console.error("Add task error:", error)
+            toast.error("Failed to add task")
+        }
+    }
+
+    const handleSubmitReport = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!user || !eodReport.trim()) return
+
+        setIsSubmitting(true)
+        try {
+            await addDoc(collection(db, "reports"), {
+                userId: user.uid,
+                userName: user.displayName || user.email,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                report: eodReport,
+                activities: activities
+            })
+            setEodReport("")
+            toast.success("EOD Report submitted successfully")
+        } catch (error) {
+            console.error("Report sub error:", error)
+            toast.error("Failed to submit report")
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     const [mounted, setMounted] = useState(false)
@@ -94,7 +272,13 @@ export default function AttendancePage() {
 
     // ... handlers ...
 
-    if (!mounted) return null // Prevent hydration mismatch by not rendering until mounted
+    if (!mounted || loading) {
+        return (
+            <div className="h-[60vh] w-full flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-8 max-w-6xl mx-auto">
@@ -130,42 +314,62 @@ export default function AttendancePage() {
 
                             {!isClockedIn ? (
                                 <div className="space-y-4">
-                                    <div className="grid grid-cols-2 gap-4 text-left">
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-medium text-muted-foreground">Department</label>
-                                            <select
-                                                className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                                value={selectedDept}
-                                                onChange={(e) => {
-                                                    setSelectedDept(e.target.value)
-                                                    setSelectedProject("")
-                                                }}
-                                            >
-                                                <option value="">Select Dept...</option>
-                                                {departments.map(dept => (
-                                                    <option key={dept.id} value={dept.id}>{dept.name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-medium text-muted-foreground">Project</label>
-                                            <select
-                                                className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                                value={selectedProject}
-                                                onChange={(e) => setSelectedProject(e.target.value)}
-                                                disabled={!selectedDept}
-                                            >
-                                                <option value="">Select Project...</option>
-                                                {availableProjects.map(proj => (
-                                                    <option key={proj.id} value={proj.client + " - " + proj.project}>{proj.client} - {proj.project}</option>
-                                                ))}
-                                            </select>
-                                        </div>
+                                    <div className="flex bg-muted/50 p-1 rounded-lg">
+                                        <button
+                                            type="button"
+                                            onClick={() => setWorkMode('general')}
+                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${workMode === 'general' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                                        >
+                                            General Work
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setWorkMode('project')}
+                                            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${workMode === 'project' ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                                        >
+                                            Specific Project
+                                        </button>
                                     </div>
+
+                                    {workMode === 'project' && (
+                                        <div className="grid grid-cols-2 gap-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
+                                            <div className="space-y-1">
+                                                <label className="text-xs font-medium text-muted-foreground">Department</label>
+                                                <select
+                                                    className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                                    value={selectedDept}
+                                                    onChange={(e) => {
+                                                        setSelectedDept(e.target.value)
+                                                        setSelectedProject("General / Agency Work")
+                                                    }}
+                                                >
+                                                    <option value="">Select Dept...</option>
+                                                    {departments.map(dept => (
+                                                        <option key={dept.id} value={dept.id}>{dept.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-xs font-medium text-muted-foreground">Project</label>
+                                                <select
+                                                    className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                                    value={selectedProject}
+                                                    onChange={(e) => setSelectedProject(e.target.value)}
+                                                >
+                                                    <option value="General / Agency Work">Select Project...</option>
+                                                    {availableProjects.map(proj => (
+                                                        <option key={proj.id} value={proj.client + " - " + (proj.project || "Unnamed Project")}>
+                                                            {proj.client} - {proj.project || "Unnamed Project"}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <button
                                         onClick={handleClockIn}
-                                        disabled={!selectedDept || !selectedProject}
+                                        disabled={workMode === 'project' && (!selectedDept || selectedProject === "General / Agency Work")}
                                         className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md font-medium flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
                                     >
                                         <Play className="h-5 w-5 fill-current" />
@@ -235,7 +439,7 @@ export default function AttendancePage() {
                     {/* Feed */}
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2">
                         {activities.map((activity, index) => (
-                            <div key={index} className="flex gap-3 text-sm group">
+                            <div key={activity.id || index} className="flex gap-3 text-sm group">
                                 <div className="w-16 font-mono text-muted-foreground text-xs pt-0.5 shrink-0 text-right">{activity.time}</div>
                                 <div className="relative pt-1">
                                     <div className={`w-2 h-2 rounded-full absolute -left-[19px] top-1.5 ${activity.type === 'system' ? 'bg-muted-foreground' : 'bg-primary'}`} />
@@ -263,11 +467,14 @@ export default function AttendancePage() {
                         Summarize your achievements, blockers, and plan for tomorrow. This will be sent to your Team Lead.
                     </p>
 
-                    <form className="flex-1 flex flex-col gap-4">
+                    <form onSubmit={handleSubmitReport} className="flex-1 flex flex-col gap-4">
                         <div className="space-y-2 flex-1">
                             <textarea
                                 className="w-full h-full min-h-[200px] bg-muted/30 border border-border rounded-md p-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-primary"
                                 placeholder="- Completed Phase 1 of Nebula Tech design&#10;- Fixed bug in Services page&#10;- Blocker: Waiting for client asset approval"
+                                value={eodReport}
+                                onChange={(e) => setEodReport(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -282,8 +489,12 @@ export default function AttendancePage() {
                             </div>
                         </div>
 
-                        <button type="button" className="w-full py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                            <Send className="h-4 w-4" />
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || !eodReport.trim()}
+                            className="w-full py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                             Submit Report
                         </button>
                     </form>

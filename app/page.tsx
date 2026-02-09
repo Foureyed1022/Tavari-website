@@ -27,9 +27,9 @@ export default function HomePage() {
       <section className="py-32 px-6 bg-muted">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-light mb-6">What We Do</h2>
+            <h2 className="text-4xl md:text-5xl font-light mb-6">Our Services</h2>
             <p className="text-lg text-muted-foreground leading-relaxed font-body max-w-3xl mx-auto">
-              We partner with you to build your brand from the ground up—from the big idea to the final product.
+              We combine strategy, creativity, and execution to deliver measurable impact and compelling storytelling across every touchpoint.
             </p>
           </div>
 
@@ -77,9 +77,9 @@ export default function HomePage() {
       <section className="py-32 px-6">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-light mb-6">Our Approach</h2>
+            <h2 className="text-4xl md:text-5xl font-light mb-6">The Tavari Approach</h2>
             <p className="text-lg text-muted-foreground leading-relaxed font-body max-w-3xl mx-auto">
-              We think before we design. We focus on culture. We handle everything from start to finish.
+              Turning ideas into powerful stories and results through a seamless integration of strategic thinking and world-class production.
             </p>
           </div>
 
@@ -176,6 +176,38 @@ export default function HomePage() {
             </div>
           </div>
         </ScrollReveal>
+      </section>
+
+      {/* Focus Areas Section */}
+      <section className="py-32 px-6 bg-muted/50">
+        <div className="container mx-auto max-w-5xl">
+          <ScrollReveal>
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl font-light mb-6">Our Focus Areas</h2>
+              <p className="text-lg text-muted-foreground font-body max-w-2xl mx-auto">
+                Specialized expertise across diverse sectors to drive meaningful change and commercial success.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { title: "Corporate & Commercial", icon: Target },
+              { title: "NGOs & Development", icon: Lightbulb },
+              { title: "Tourism & Destination", icon: Camera },
+              { title: "Creative & Culture", icon: ArrowRight }
+            ].map((area, i) => (
+              <ScrollReveal key={area.title} delay={i * 0.1}>
+                <div className="p-8 bg-background border border-border/50 hover:border-primary/50 transition-colors group text-center h-full flex flex-col items-center justify-center">
+                  <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <area.icon className="h-6 w-6 text-foreground" />
+                  </div>
+                  <h4 className="text-lg font-medium leading-tight">{area.title}</h4>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
       </section>
 
       <Footer />

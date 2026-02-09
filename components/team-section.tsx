@@ -1,6 +1,9 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { ImageWithFallback } from "@/components/ImageWithFallback"
+import { db } from "@/lib/firebase"
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 
 const teamMembers = [
     {
@@ -42,6 +45,29 @@ const teamMembers = [
 ]
 
 export function TeamSection() {
+    const [members, setMembers] = useState<any[]>(teamMembers)
+
+    useEffect(() => {
+        const q = query(collection(db, "profiles"), orderBy("displayName", "asc"))
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            if (!snapshot.empty) {
+                const teamData: any[] = []
+                snapshot.forEach((doc) => {
+                    const data = doc.data()
+                    teamData.push({
+                        name: data.displayName,
+                        role: data.role,
+                        bio: data.bio || "Tavari team member.",
+                        image: data.photoURL || "/images/team/placeholder-1.jpg"
+                    })
+                })
+                setMembers(teamData)
+            }
+        })
+
+        return () => unsubscribe()
+    }, [])
+
     return (
         <section className="py-32 px-6 bg-muted/30">
             <div className="container mx-auto max-w-6xl">
@@ -53,7 +79,7 @@ export function TeamSection() {
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {teamMembers.map((member, index) => (
+                    {members.map((member, index) => (
                         <div
                             key={index}
                             className="group relative bg-background rounded-lg border border-border/50 overflow-hidden hover:border-foreground/20 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 fade-in-up"

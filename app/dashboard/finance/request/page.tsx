@@ -1,185 +1,173 @@
 "use client"
 
-import { useState } from "react"
-import { ArrowLeft, Send, CheckCircle2, AlertCircle } from "lucide-react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { ArrowLeft, DollarSign, Loader2, Send } from "lucide-react"
+import Link from "next/link"
+import { useAuth } from "@/contexts/AuthContext"
+import { db } from "@/lib/firebase"
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from "firebase/firestore"
+import { toast } from "sonner"
+import { DEPARTMENTS } from "@/lib/constants"
+import { sendNotification } from "@/lib/notifications"
 
 export default function FundRequestPage() {
+    const { user } = useAuth()
     const router = useRouter()
-    const [submitted, setSubmitted] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [projects, setProjects] = useState<any[]>([])
+    const [formData, setFormData] = useState({
+        amount: "",
+        projectId: "",
+        project: "",
+        category: "production",
+        description: "",
+    })
 
-    // Selection State
-    const [selectedDept, setSelectedDept] = useState("")
-    const [selectedProject, setSelectedProject] = useState("")
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const q = query(collection(db, "projects"), orderBy("createdAt", "desc"))
+                const querySnapshot = await getDocs(q)
+                const projs = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                })) as any[]
+                setProjects(projs)
+                if (projs.length > 0) {
+                    setFormData(prev => ({ ...prev, projectId: projs[0].id, project: projs[0].project }))
+                }
+            } catch (error) {
+                console.error("Error fetching projects:", error)
+            }
+        }
+        fetchProjects()
+    }, [])
 
-    // Form State
-    const [amount, setAmount] = useState("")
-    const [description, setDescription] = useState("")
-    const [date, setDate] = useState("")
-
-    const departments = [
-        { id: "strategy", name: "Strategy" },
-        { id: "design", name: "Identity & Design" },
-        { id: "campaigns", name: "Campaigns" },
-        { id: "production", name: "Production" },
-        { id: "events", name: "Events" },
-        { id: "merch", name: "Merchandise" },
-    ]
-
-    const allProjects = [
-        { id: "PROJ-24-001", client: "Nebula Tech", project: "Rebrand & Website", department: "strategy" },
-        { id: "PROJ-24-005", client: "Malawi Tourism", project: "Destination Campaign", department: "campaigns" },
-        { id: "PROJ-24-003", client: "Urban Culture Festival", project: "Event Branding & Merch", department: "events" },
-        { id: "PROJ-24-008", client: "Horizon Finance", project: "Corporate Strategy", department: "strategy" },
-        { id: "PROJ-24-012", client: "EcoSolutions", project: "Sustainability Report", department: "design" },
-        { id: "PROJ-24-015", client: "Tavari Merch Drop 1", project: "Apparel Collection", department: "merch" },
-        { id: "PROJ-24-018", client: "Music Video: 'Roots'", project: "Video Production", department: "production" },
-    ]
-
-    const availableProjects = selectedDept
-        ? allProjects.filter(p => p.department === selectedDept || (selectedDept === 'events' && p.department === 'merch'))
-        : []
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setSubmitted(true)
-        // Simulate API call
-        setTimeout(() => {
-            router.push("/dashboard/finance")
-        }, 2000)
-    }
+        if (!user) return
 
-    if (submitted) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4">
-                <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle2 className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-medium">Request Submitted</h2>
-                <p className="text-muted-foreground max-w-md">
-                    Your fund request for <span className="font-medium text-foreground">{selectedProject}</span> has been sent to Finance for approval. Redirecting...
-                </p>
-            </div>
-        )
+        setLoading(true)
+        try {
+            await addDoc(collection(db, "fund_requests"), {
+                userId: user.uid,
+                userName: user.displayName || user.email,
+                amount: parseFloat(formData.amount),
+                projectId: formData.projectId,
+                project: formData.project,
+                category: formData.category,
+                description: formData.description,
+                targetDepartment: "finance",
+                status: "pending",
+                timestamp: serverTimestamp(),
+                date: new Date().toLocaleDateString('en-GB')
+            })
+
+            // Notify Finance
+            await sendNotification(
+                'finance',
+                'New Fund Request',
+                `${user.displayName || user.email} requested MK ${parseFloat(formData.amount).toLocaleString()} for ${formData.project}`,
+                'request_new',
+                '/dashboard/finance/requests'
+            )
+
+            toast.success("Fund request submitted successfully")
+            router.push("/dashboard/finance")
+        } catch (error) {
+            console.error("Fund request error:", error)
+            toast.error("Failed to submit request")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
         <div className="max-w-2xl mx-auto space-y-8">
-            <div className="flex items-center gap-4">
-                <Link href="/dashboard/finance" className="p-2 -ml-2 hover:bg-muted rounded-full transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
-                </Link>
-                <div>
-                    <h2 className="text-3xl font-light tracking-tight">Request Funds</h2>
-                    <p className="text-muted-foreground text-sm mt-1">
-                        Submit expenses or budget requests for project approval.
-                    </p>
-                </div>
+            <Link href="/dashboard/finance" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Finance
+            </Link>
+
+            <div>
+                <h2 className="text-3xl font-light tracking-tight">New Fund Request</h2>
+                <p className="text-muted-foreground text-sm mt-1">
+                    Request funds for project-related expenses. All requests are routed to the Finance Department.
+                </p>
             </div>
 
-            <div className="bg-card border border-border/50 rounded-lg p-8 shadow-sm">
-                <form onSubmit={handleSubmit} className="space-y-6">
-
-                    {/* Project Context */}
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Department</label>
-                            <select
-                                required
-                                className="w-full bg-muted/30 border border-border rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                value={selectedDept}
-                                onChange={(e) => {
-                                    setSelectedDept(e.target.value)
-                                    setSelectedProject("")
-                                }}
-                            >
-                                <option value="">Select Department...</option>
-                                {departments.map(dept => (
-                                    <option key={dept.id} value={dept.id}>{dept.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Project</label>
-                            <select
-                                required
-                                className="w-full bg-muted/30 border border-border rounded-md px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                                value={selectedProject}
-                                onChange={(e) => setSelectedProject(e.target.value)}
-                                disabled={!selectedDept}
-                            >
-                                <option value="">Select Project...</option>
-                                {availableProjects.map(proj => (
-                                    <option key={proj.id} value={proj.client + " - " + proj.project}>{proj.client} - {proj.project}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Amount & Date */}
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Amount Needed (MWK)</label>
-                            <div className="relative">
-                                <span className="absolute left-3 top-2.5 text-muted-foreground text-sm">MK</span>
-                                <input
-                                    required
-                                    type="number"
-                                    min="0"
-                                    placeholder="0.00"
-                                    className="w-full bg-muted/30 border border-border rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Date Required</label>
+            <form onSubmit={handleSubmit} className="bg-card border border-border/50 rounded-lg p-8 space-y-6 shadow-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Amount (MK)</label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-2.5 text-muted-foreground text-sm font-mono">MK</span>
                             <input
                                 required
-                                type="date"
-                                className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
+                                type="number"
+                                placeholder="0.00"
+                                className="w-full bg-muted/30 border border-border rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                value={formData.amount}
+                                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                             />
                         </div>
                     </div>
 
-                    {/* Description */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Description / Reason</label>
-                        <textarea
-                            required
-                            className="w-full min-h-[120px] bg-muted/30 border border-border rounded-md p-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-primary"
-                            placeholder="E.g., Procurement of 2x specialized lenses for the music video shoot..."
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Helper Text */}
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-4 flex gap-3 text-sm text-blue-400">
-                        <AlertCircle className="h-5 w-5 shrink-0" />
-                        <p>Requests over MK 500,000 require secondary approval from the Finance Director.</p>
-                    </div>
-
-                    <div className="pt-4 flex justify-end gap-3">
-                        <Link href="/dashboard/finance" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                            Cancel
-                        </Link>
-                        <button
-                            type="submit"
-                            disabled={!selectedProject || !amount || !description}
-                            className="px-6 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        <label className="text-sm font-medium">Expense Category</label>
+                        <select
+                            className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                            value={formData.category}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                         >
-                            <Send className="h-4 w-4" />
-                            Submit Request
-                        </button>
+                            <option value="production">Production Gear</option>
+                            <option value="talent">Talent & Crew</option>
+                            <option value="travel">Travel & Logistics</option>
+                            <option value="software">Software & Licenses</option>
+                            <option value="admin">Office & Admin</option>
+                        </select>
                     </div>
+                </div>
 
-                </form>
-            </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium">Select Project</label>
+                    <select
+                        required
+                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                        value={formData.projectId}
+                        onChange={(e) => {
+                            const p = projects.find(proj => proj.id === e.target.value)
+                            setFormData({ ...formData, projectId: e.target.value, project: p?.project || "" })
+                        }}
+                    >
+                        {projects.length === 0 && <option value="">Loading projects...</option>}
+                        {projects.map(p => (
+                            <option key={p.id} value={p.id}>{p.client} — {p.project}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium">Description / Reason</label>
+                    <textarea
+                        required
+                        className="w-full h-32 bg-muted/30 border border-border rounded-md p-3 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                        placeholder="Explain why these funds are needed..."
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                    Submit to Finance
+                </button>
+            </form>
         </div>
     )
 }
