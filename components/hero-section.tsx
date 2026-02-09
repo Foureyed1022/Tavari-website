@@ -13,10 +13,11 @@ export function HeroSection() {
         offset: ["start start", "end start"],
     })
 
-    // Parallax efffects
+    // Parallax effects
     const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
     const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+    const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+    const buttonOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0]) // Buttons stay visible longer
 
     return (
         <section
