@@ -2,15 +2,23 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-      <div className="container mx-auto px-6 py-8">
+    <nav
+      className={`z-50 transition-all duration-300 ${isHome
+          ? "absolute top-0 left-0 right-0 bg-transparent py-6"
+          : "relative bg-background border-b border-border/20 py-4 shadow-sm"
+        }`}
+    >
+      <div className="container mx-auto px-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">

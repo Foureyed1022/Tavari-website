@@ -244,6 +244,80 @@ export default function ServicesPage() {
               />
             </div>
           </div>
+
+          {/* Events */}
+          <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
+            <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
+              <ImageWithFallback
+                src="/images/events-experience.svg"
+                alt="Events & Experience Design"
+                width={600}
+                height={400}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h3 className="text-4xl font-light mb-6">Events</h3>
+              <p className="text-muted-foreground font-body mb-8 leading-relaxed">
+                We plan and deliver well-designed events and experiences that bring people, brands, and ideas together. Each event is curated with intention, from concept to execution.
+              </p>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Event concept and strategy</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Experience design and production</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Guest management and logistics</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Brand activation and engagement</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Merchandise (Apparel) */}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="order-2 md:order-1">
+              <h3 className="text-4xl font-light mb-6">Merchandise (Apparel)</h3>
+              <p className="text-muted-foreground font-body mb-8 leading-relaxed">
+                We design and produce apparel and branded merchandise that reflects identity, culture, and purpose. Our focus is on clean design, quality materials, and meaningful expression.
+              </p>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Apparel design and production</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Branded merchandise collections</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Sourcing and material selection</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-5 w-5 mt-1 flex-shrink-0" />
+                  <span className="font-body text-sm">Quality control and logistics</span>
+                </li>
+              </ul>
+            </div>
+            <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
+              <ImageWithFallback
+                src="/images/merchandise-design.svg"
+                alt="Merchandise Design"
+                width={600}
+                height={400}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
