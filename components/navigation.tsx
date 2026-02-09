@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Navigation() {
@@ -69,10 +69,14 @@ export function Navigation() {
           <div className="hidden md:flex items-center gap-3">
             <Button
               asChild
-              variant="outline"
-              className="rounded-none px-6 py-6 font-body text-xs tracking-wider uppercase border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              variant="ghost"
+              size="icon"
+              className="rounded-full w-10 h-10 hover:bg-primary/10"
+              title="Dashboard Login"
             >
-              <Link href="/login">Dashboard</Link>
+              <Link href="/login">
+                <User className="h-5 w-5" />
+              </Link>
             </Button>
             <Button
               asChild
@@ -127,24 +131,29 @@ export function Navigation() {
             >
               Contact
             </Link>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-none px-6 py-6 font-body text-xs tracking-wider uppercase border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Link href="/login">Dashboard</Link>
-            </Button>
-            <Button
-              asChild
-              variant="default"
-              className="rounded-none px-8 py-6 font-body text-xs tracking-wider uppercase w-full"
-            >
-              <Link href="/contact">Work With Us</Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className="rounded-full w-12 h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Link href="/login">
+                  <User className="h-5 w-5" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="default"
+                className="rounded-none px-8 py-6 font-body text-xs tracking-wider uppercase flex-1"
+              >
+                <Link href="/contact">Work With Us</Link>
+              </Button>
+            </div>
           </div>
         )}
       </div>
-    </nav>
+    </nav >
   )
 }
