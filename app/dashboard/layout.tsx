@@ -28,6 +28,7 @@ import { useState, useEffect } from "react"
 import { db } from "@/lib/firebase"
 import { collection, query, where, onSnapshot, orderBy, limit, doc, updateDoc, writeBatch, getDocs } from "firebase/firestore"
 import { toast } from "sonner"
+import { useTheme } from "next-themes"
 
 export default function DashboardLayout({
     children,
@@ -37,11 +38,14 @@ export default function DashboardLayout({
     const pathname = usePathname()
     const { user } = useAuth()
     const router = useRouter()
+    const { theme } = useTheme()
+    const [mounted, setMounted] = useState(false)
     const [notifications, setNotifications] = useState<any[]>([])
     const [userProfile, setUserProfile] = useState<any>(null)
     const [showNotifications, setShowNotifications] = useState(false)
 
     useEffect(() => {
+        setMounted(true)
         if (!user) return
 
         // 1. Fetch User Profile
@@ -49,6 +53,8 @@ export default function DashboardLayout({
             if (docSnap.exists()) {
                 setUserProfile(docSnap.data())
             }
+        }, (error) => {
+            console.error("Firestore Profile Error:", error)
         })
 
         return () => unsubProfile()
@@ -79,6 +85,11 @@ export default function DashboardLayout({
             })
 
             setNotifications(notifs.slice(0, 20))
+        }, (error) => {
+            console.error("Firestore Notifications Error:", error)
+            // If the failure is due to 'finance' query, we might want to split the queries
+            // but for now, we just handle the error gracefully
+            setNotifications([])
         })
 
         return () => unsubscribe()
@@ -149,7 +160,12 @@ export default function DashboardLayout({
             <aside className="w-64 bg-card border-r border-border hidden md:flex flex-col">
                 <div className="p-6 border-b border-border flex items-center gap-3">
                     <div className="relative w-8 h-8">
-                        <ImageWithFallback src="/TAVARI CONNECT -White.png" alt="Tavari Logo" fill className="object-contain" />
+                        <ImageWithFallback
+                            src={mounted && theme === 'light' ? "/TAVARI CONNECT - R.png" : "/TAVARI CONNECT -White.png"}
+                            alt="Tavari Logo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
                     <Link href="/" className="block">
                         <h1 className="text-xl font-light tracking-wider flex items-center">TAVARI <span className="text-[10px] font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded ml-2 align-middle">OPS</span></h1>
@@ -167,7 +183,7 @@ export default function DashboardLayout({
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-body ${isActive
-                                        ? "bg-primary/10 text-primary-foreground font-medium"
+                                        ? "bg-primary/10 text-primary font-medium"
                                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                         }`}
                                 >

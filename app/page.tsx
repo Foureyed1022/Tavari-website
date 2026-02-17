@@ -11,7 +11,7 @@ import { ServicesSection } from "@/components/services-section"
 import { PromiseSection } from "@/components/promise-section"
 
 export const metadata = {
-  title: "TAVARI — Culture-Led Brand Strategy & Creative Production",
+  title: "TAVARI",
   description: "We help organizations build meaningful, relevant, and enduring brands through strategy-first thinking and world-class creative execution.",
 }
 
@@ -98,7 +98,7 @@ export default function HomePage() {
             <ScrollReveal delay={0.2}>
               <div className="h-80 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                 <ImageWithFallback
-                  src="/images/strategic-framework-home.svg"
+                  src="/strategy.png"
                   alt="Strategic Framework Visualization"
                   width={500}
                   height={320}

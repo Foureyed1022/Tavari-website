@@ -6,7 +6,7 @@ import { ArrowLeft, DollarSign, Loader2, Send } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
 import { db } from "@/lib/firebase"
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from "firebase/firestore"
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, getDoc } from "firebase/firestore"
 import { toast } from "sonner"
 import { DEPARTMENTS } from "@/lib/constants"
 import { sendNotification } from "@/lib/notifications"
@@ -16,6 +16,7 @@ export default function FundRequestPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [projects, setProjects] = useState<any[]>([])
+    const [userProfile, setUserProfile] = useState<any>(null)
     const [formData, setFormData] = useState({
         amount: "",
         projectId: "",
@@ -25,24 +26,43 @@ export default function FundRequestPage() {
     })
 
     useEffect(() => {
-        const fetchProjects = async () => {
+        const fetchData = async () => {
+            if (!user) return
             try {
+                // 1. Fetch Profile
+                const profileSnap = await getDoc(doc(db, "profiles", user.uid))
+                let profileDept = ""
+                let isPowerUser = false
+                if (profileSnap.exists()) {
+                    const data = profileSnap.data()
+                    setUserProfile(data)
+                    profileDept = data.department || ""
+                    isPowerUser = ['admin', 'CEO', 'Finance Manager'].includes(data.role)
+                }
+
+                // 2. Fetch Projects
                 const q = query(collection(db, "projects"), orderBy("createdAt", "desc"))
                 const querySnapshot = await getDocs(q)
-                const projs = querySnapshot.docs.map(doc => ({
+                let projs = querySnapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 })) as any[]
+
+                // 3. Filter by department if not power user
+                if (!isPowerUser && profileDept) {
+                    projs = projs.filter(p => p.department === profileDept)
+                }
+
                 setProjects(projs)
                 if (projs.length > 0) {
                     setFormData(prev => ({ ...prev, projectId: projs[0].id, project: projs[0].project }))
                 }
             } catch (error) {
-                console.error("Error fetching projects:", error)
+                console.error("Error fetching data:", error)
             }
         }
-        fetchProjects()
-    }, [])
+        fetchData()
+    }, [user])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

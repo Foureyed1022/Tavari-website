@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer"
 import { ImageWithFallback } from "@/components/ImageWithFallback"
 
 export const metadata = {
-  title: "Work — TAVARI",
+  title: "Work TAVARI",
   description: "Selected case studies showcasing our strategic approach to brand development and creative execution.",
 }
 

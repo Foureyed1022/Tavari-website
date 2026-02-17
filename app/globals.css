@@ -4,122 +4,108 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* TAVARI Color Palette - Refined for Visibility & Depth */
-  --color-primary: #ffffff;
-  --color-primary-foreground: #0F172A;
-  /* Richer dark for contrast */
+  /* LIGHT MODE (Default) */
+  --background: #ffffff;
+  --foreground: #020617;
+  /* Slate 950 */
 
-  /* Background and surface colors */
-  --background: #0F172A;
-  /* Deep rich navy/slate (Slate 900) - Stronger base */
-  --foreground: #F1F5F9;
-  /* Slate 100 - Crisp text */
+  --card: #ffffff;
+  --card-foreground: #020617;
 
-  /* Surface colors */
-  --card: #1E293B;
-  /* Slate 800 - Distinct card layer */
-  --card-foreground: #F1F5F9;
+  --popover: #ffffff;
+  --popover-foreground: #020617;
 
-  --popover: #1E293B;
-  --popover-foreground: #F1F5F9;
+  --primary: #0f172a;
+  /* Deep navy */
+  --primary-foreground: #ffffff;
 
-  /* Secondary colors */
-  --secondary: #334155;
-  /* Slate 700 - Visible secondary elements */
-  --secondary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  /* Slate 100 */
+  --secondary-foreground: #0f172a;
 
-  /* Muted tones */
-  --muted: #1E293B;
-  /* Matches card for cohesive "off-background" areas */
-  --muted-foreground: #94A3B8;
-  /* Slate 400 - Readable but distinct from primary text */
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  /* Slate 500 */
 
-  /* Accent colors */
-  --accent: #334155;
-  --accent-foreground: #ffffff;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
 
-  /* Destructive */
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  /* Borders and inputs */
-  --border: #334155;
-  /* Slate 700 - Visible borders */
-  --input: #334155;
-  --ring: #94A3B8;
+  --border: #e2e8f0;
+  /* Slate 200 */
+  --input: #e2e8f0;
+  --ring: #0f172a;
 
-  /* Chart colors */
-  --chart-1: #38BDF8;
-  --chart-2: #818CF8;
-  --chart-3: #A78BFA;
-  --chart-4: #F472B6;
-  --chart-5: #FB7185;
+  --radius: 0.5rem;
 
-  --radius: 0rem;
+  /* Sidebar Light Mode */
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0f172a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #0f172a;
 
-  /* Sidebar colors */
-  --sidebar: #0F172A;
-  --sidebar-foreground: #F1F5F9;
-  --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #0F172A;
-  --sidebar-accent: #1E293B;
-  --sidebar-accent-foreground: #F1F5F9;
-  --sidebar-border: #334155;
-  --sidebar-ring: #94A3B8;
+  /* Chart Colors (Light) */
+  --chart-1: #0f172a;
+  --chart-2: #334155;
+  --chart-3: #475569;
+  --chart-4: #64748b;
+  --chart-5: #94a3b8;
 }
 
 .dark {
-  /* TAVARI Dark Theme Colors */
+  /* DARK MODE (Tavari) */
   --background: #0f172a;
-  /* Darker blue-gray background */
-  --foreground: #e2e8f0;
-  /* Light blue-gray */
+  --foreground: #f1f5f9;
+
   --card: #1e293b;
-  /* Medium blue-gray */
-  --card-foreground: #e2e8f0;
+  --card-foreground: #f1f5f9;
+
   --popover: #1e293b;
-  /* Medium blue-gray */
-  --popover-foreground: #e2e8f0;
+  --popover-foreground: #f1f5f9;
+
   --primary: #ffffff;
-  /* White primary */
   --primary-foreground: #0f172a;
-  /* Dark background */
-  --secondary: #1B2E44;
-  /* Blue-gray secondary */
+
+  --secondary: #334155;
   --secondary-foreground: #ffffff;
-  --muted: #334155;
-  /* Dark blue-gray */
+
+  --muted: #1e293b;
   --muted-foreground: #94a3b8;
-  /* Lighter blue-gray */
-  --accent: #475569;
-  /* Medium-dark blue-gray */
-  --accent-foreground: #e2e8f0;
+
+  --accent: #334155;
+  --accent-foreground: #ffffff;
+
   --destructive: #ef4444;
-  /* Red */
   --destructive-foreground: #ffffff;
+
   --border: #334155;
-  /* Dark blue-gray */
   --input: #334155;
   --ring: #94a3b8;
-  /* Lighter blue-gray */
-  --chart-1: #cbd5e1;
-  /* Light */
-  --chart-2: #94a3b8;
-  /* Medium-light */
-  --chart-3: #64748b;
-  /* Medium */
-  --chart-4: #334155;
-  /* Medium-dark */
-  --chart-5: #1e293b;
-  /* Dark */
+
+  --radius: 0.5rem;
+
+  /* Sidebar Dark Mode */
   --sidebar: #0f172a;
-  --sidebar-foreground: #e2e8f0;
+  --sidebar-foreground: #f1f5f9;
   --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: #0f172a;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f1f5f9;
   --sidebar-border: #334155;
   --sidebar-ring: #94a3b8;
+
+  /* Chart Colors (Dark) */
+  --chart-1: #ffffff;
+  --chart-2: #cbd5e1;
+  --chart-3: #94a3b8;
+  --chart-4: #64748b;
+  --chart-5: #475569;
 }
 
 @theme inline {
@@ -131,9 +117,8 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--color-primary);
-  /* Using new TAVARI primary */
-  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

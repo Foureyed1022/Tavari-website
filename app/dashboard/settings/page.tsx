@@ -10,9 +10,11 @@ import { updateProfile, signOut } from "firebase/auth"
 import { auth, db, storage } from "@/lib/firebase"
 import { toast } from "sonner"
 import { DEPARTMENTS } from "@/lib/constants"
+import { useTheme } from "next-themes"
 
 export default function SettingsPage() {
     const { user } = useAuth()
+    const { theme, setTheme } = useTheme()
     const handleSignOut = () => signOut(auth)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
@@ -47,6 +49,9 @@ export default function SettingsPage() {
                     photoURL: user.photoURL || ""
                 }))
             }
+            setLoading(false)
+        }, (error) => {
+            console.error("Firestore Profile Error:", error)
             setLoading(false)
         })
 
@@ -224,8 +229,9 @@ export default function SettingsPage() {
                                     <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Department</label>
                                     <select
                                         value={profile.department}
+                                        disabled={!['admin', 'CEO', 'Finance Manager'].includes(profile.role)}
                                         onChange={e => setProfile({ ...profile, department: e.target.value })}
-                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70 disabled:grayscale-[0.5]"
                                     >
                                         {DEPARTMENTS.map(dept => (
                                             <option key={dept.id} value={dept.id}>{dept.name}</option>
@@ -274,8 +280,24 @@ export default function SettingsPage() {
                                 <p className="text-xs text-muted-foreground">Select your interface theme.</p>
                             </div>
                             <div className="flex gap-2">
-                                <button className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium">Dark (Tavari)</button>
-                                <button className="px-3 py-1.5 rounded-md bg-muted text-foreground text-xs font-medium hover:bg-muted/80">Light</button>
+                                <button
+                                    onClick={() => setTheme("dark")}
+                                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${theme === "dark"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-foreground hover:bg-muted/80"
+                                        }`}
+                                >
+                                    Dark (Tavari)
+                                </button>
+                                <button
+                                    onClick={() => setTheme("light")}
+                                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${theme === "light"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-foreground hover:bg-muted/80"
+                                        }`}
+                                >
+                                    Light
+                                </button>
                             </div>
                         </div>
 

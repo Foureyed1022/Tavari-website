@@ -101,7 +101,7 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
             <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/identity-design.svg"
+                src="/brand.png"
                 alt="Identity Design Showcase"
                 width={600}
                 height={400}

@@ -48,7 +48,7 @@ export function HeroSection() {
             {/* Content */}
             <motion.div
                 className="relative z-10 text-center max-w-4xl"
-                style={{ y: textY, opacity }}
+                style={{ y: textY, opacity: textOpacity }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}

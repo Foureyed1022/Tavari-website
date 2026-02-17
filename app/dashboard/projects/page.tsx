@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase"
 import { collection, query, onSnapshot, orderBy, where, serverTimestamp, addDoc, updateDoc, doc } from "firebase/firestore"
 import { toast } from "sonner"
 import { DEPARTMENTS, getDepartmentName } from "@/lib/constants"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Firestore Projects Page
 
@@ -14,6 +15,8 @@ export default function ProjectsPage() {
     const searchParams = useSearchParams()
     const departmentFilter = searchParams.get("type")
 
+    const { user } = useAuth()
+    const [userProfile, setUserProfile] = useState<any>(null)
     const [projects, setProjects] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,6 +29,28 @@ export default function ProjectsPage() {
         budget: "",
         deadline: ""
     })
+
+    useEffect(() => {
+        if (!user) return
+        const unsub = onSnapshot(doc(db, "profiles", user.uid), (snap) => {
+            if (snap.exists()) {
+                const data = snap.data()
+                setUserProfile(data)
+                setNewProject(prev => ({ ...prev, department: data.department || "design" }))
+            }
+        }, (error) => {
+            console.error("Firestore Profile Error:", error)
+        })
+        return () => unsub()
+    }, [user])
+
+    const isPowerUser = ['admin', 'CEO', 'Finance Manager'].includes(userProfile?.role)
+    const canEditDepartment = (deptId: string) => {
+        if (isPowerUser) return true
+        return userProfile?.department === deptId
+    }
+
+    const isViewOnly = departmentFilter ? !canEditDepartment(departmentFilter) : false
 
     const handleSeedData = async () => {
         const mockProjs = [
@@ -133,7 +158,7 @@ export default function ProjectsPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {projects.length === 0 && !loading && (
+                    {projects.length === 0 && !loading && isPowerUser && (
                         <button
                             onClick={handleSeedData}
                             className="px-4 py-2 bg-muted text-foreground text-sm font-medium rounded-md hover:bg-muted/80 transition-colors"
@@ -145,13 +170,15 @@ export default function ProjectsPage() {
                         <Filter className="h-4 w-4" />
                         Filter
                     </button>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
-                    >
-                        <Plus className="h-4 w-4" />
-                        New Project
-                    </button>
+                    {!isViewOnly && (
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
+                        >
+                            <Plus className="h-4 w-4" />
+                            New Project
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -224,8 +251,9 @@ export default function ProjectsPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <select
-                                                className="bg-transparent border-none p-0 text-xs font-medium focus:ring-0 cursor-pointer hover:underline"
+                                                className={`bg-transparent border-none p-0 text-xs font-medium focus:ring-0 ${canEditDepartment(project.department) ? 'cursor-pointer hover:underline' : 'cursor-default opacity-70'}`}
                                                 value={project.status}
+                                                disabled={!canEditDepartment(project.department)}
                                                 onChange={(e) => handleUpdateStatus(project.id, e.target.value)}
                                             >
                                                 {PROJECT_STATUSES.map(status => (
@@ -282,8 +310,9 @@ export default function ProjectsPage() {
                                 <div className="space-y-2">
                                     <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Department</label>
                                     <select
-                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70 disabled:grayscale-[0.5]"
                                         value={newProject.department}
+                                        disabled={!isPowerUser}
                                         onChange={e => setNewProject({ ...newProject, department: e.target.value })}
                                     >
                                         {DEPARTMENTS.map(dept => (

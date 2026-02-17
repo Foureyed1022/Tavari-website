@@ -2,7 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 
 export const metadata = {
-  title: "Privacy Policy — TAVARI",
+  title: "Privacy Policy",
   description: "Privacy policy for TAVARI brand strategy and creative consultancy services.",
 }
 

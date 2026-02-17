@@ -81,6 +81,9 @@ export default function AttendancePage() {
 
             setActivities(acts)
             setLoading(false)
+        }, (error) => {
+            console.error("Firestore Activities Error:", error)
+            setLoading(false)
         })
 
         // 3. Fetch Projects
@@ -94,8 +97,13 @@ export default function AttendancePage() {
         // 4. Fetch User Profile
         const unsubscribeProfile = onSnapshot(doc(db, "profiles", user.uid), (docSnap) => {
             if (docSnap.exists()) {
-                setUserProfile(docSnap.data())
+                const data = docSnap.data()
+                setUserProfile(data)
+                // Set default department if not already set by session sync
+                setSelectedDept(prev => prev || data.department || "")
             }
+        }, (error) => {
+            console.error("Firestore Profile Error:", error)
         })
 
         return () => {
@@ -127,6 +135,7 @@ export default function AttendancePage() {
     const [currentSessionProject, setCurrentSessionProject] = useState("")
 
     const departments = DEPARTMENTS
+    const isPowerUser = ['admin', 'CEO', 'Finance Manager'].includes(userProfile?.role)
 
     const availableProjects = selectedDept
         ? projects.filter(p => p.department === selectedDept)
@@ -336,8 +345,9 @@ export default function AttendancePage() {
                                             <div className="space-y-1">
                                                 <label className="text-xs font-medium text-muted-foreground">Department</label>
                                                 <select
-                                                    className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                                    className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70 disabled:grayscale-[0.5]"
                                                     value={selectedDept}
+                                                    disabled={!isPowerUser}
                                                     onChange={(e) => {
                                                         setSelectedDept(e.target.value)
                                                         setSelectedProject("General / Agency Work")
