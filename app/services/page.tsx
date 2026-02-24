@@ -88,7 +88,7 @@ export default function ServicesPage() {
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/strategy-framework.svg"
+                src="/images/strategy-framework.png"
                 alt="Strategic Framework Visualization"
                 width={600}
                 height={400}
@@ -162,7 +162,7 @@ export default function ServicesPage() {
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/creative-campaign.svg"
+                src="/images/creative-campaign.png"
                 alt="Creative Campaign Showcase"
                 width={600}
                 height={400}

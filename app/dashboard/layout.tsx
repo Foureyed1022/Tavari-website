@@ -54,7 +54,7 @@ export default function DashboardLayout({
                 setUserProfile(docSnap.data())
             }
         }, (error) => {
-            console.error("Firestore Profile Error:", error)
+            console.error("DashboardLayout Profile Listener Error:", error)
         })
 
         return () => unsubProfile()
@@ -86,7 +86,7 @@ export default function DashboardLayout({
 
             setNotifications(notifs.slice(0, 20))
         }, (error) => {
-            console.error("Firestore Notifications Error:", error)
+            console.error("DashboardLayout Notifications Listener Error:", error)
             // If the failure is due to 'finance' query, we might want to split the queries
             // but for now, we just handle the error gracefully
             setNotifications([])
@@ -135,6 +135,8 @@ export default function DashboardLayout({
         { name: "Team", href: "/dashboard/team", icon: Users },
         { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
     ]
+
+    const isAdmin = userProfile?.role?.toLowerCase() === 'admin'
 
     const deptColors: Record<string, string> = {
         strategy: "bg-purple-500",
@@ -308,8 +310,16 @@ export default function DashboardLayout({
                                 </>
                             )}
                         </div>
-                        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium text-primary-foreground border border-primary/20">
-                            {userInitials}
+                        <div className="flex items-center gap-3 px-3 py-1 bg-muted/30 rounded-full border border-border/50">
+                            <div className="flex flex-col items-end mr-1">
+                                <span className="text-[10px] font-bold text-foreground leading-none">{user?.displayName?.split(' ')[0]}</span>
+                                {isAdmin && (
+                                    <span className="text-[9px] font-bold text-primary uppercase tracking-tighter leading-none mt-1">Admin Access</span>
+                                )}
+                            </div>
+                            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium text-primary-foreground border border-primary/20">
+                                {userInitials}
+                            </div>
                         </div>
                     </div>
                 </header>

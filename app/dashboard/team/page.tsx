@@ -4,14 +4,26 @@ import { useState, useEffect } from "react"
 import { Mail, Phone, Calendar, Loader2 } from "lucide-react"
 import { ImageWithFallback } from "@/components/ImageWithFallback"
 import { db } from "@/lib/firebase"
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
+import { collection, onSnapshot, query, orderBy, doc, updateDoc } from "firebase/firestore"
+import { useAuth } from "@/contexts/AuthContext"
+import { toast } from "sonner"
 
 export default function TeamPage() {
+    const { user } = useAuth()
+    const [userProfile, setUserProfile] = useState<any>(null)
     const [members, setMembers] = useState<any[]>([])
     const [presence, setPresence] = useState<Record<string, any>>({})
     const [loading, setLoading] = useState(true)
 
+    const isAdmin = userProfile?.role?.toLowerCase() === 'admin'
+
     useEffect(() => {
+        if (!user) return
+
+        const unsubProfile = onSnapshot(doc(db, "profiles", user.uid), (docSnap) => {
+            if (docSnap.exists()) setUserProfile(docSnap.data())
+        }, (error) => console.error("Team Profile Listener Error:", error))
+
         const qMembers = query(collection(db, "profiles"), orderBy("displayName", "asc"))
         const unsubMembers = onSnapshot(qMembers, (snapshot) => {
             const teamData: any[] = []
@@ -20,7 +32,7 @@ export default function TeamPage() {
             })
             setMembers(teamData)
             setLoading(false)
-        })
+        }, (error) => console.error("Team Members Listener Error:", error))
 
         const qPresence = query(collection(db, "presence"))
         const unsubPresence = onSnapshot(qPresence, (snapshot) => {
@@ -29,13 +41,27 @@ export default function TeamPage() {
                 presenceMap[doc.id] = doc.data()
             })
             setPresence(presenceMap)
-        })
+        }, (error) => console.error("Team Presence Listener Error:", error))
 
         return () => {
+            unsubProfile()
             unsubMembers()
             unsubPresence()
         }
-    }, [])
+    }, [user])
+
+    const handleUpdateRole = async (memberId: string, newRole: string) => {
+        try {
+            await updateDoc(doc(db, "profiles", memberId), {
+                role: newRole,
+                updatedAt: new Date().toISOString()
+            })
+            toast.success("Role updated successfully")
+        } catch (error) {
+            console.error(error)
+            toast.success("Failed to update role")
+        }
+    }
 
     if (loading) {
         return (
@@ -87,7 +113,23 @@ export default function TeamPage() {
 
                                 <div className="mt-12">
                                     <h3 className="text-lg font-medium">{member.displayName}</h3>
-                                    <p className="text-sm text-primary font-medium mb-4">{member.role || "Team Member"}</p>
+                                    {isAdmin ? (
+                                        <select
+                                            className="text-sm text-primary font-medium bg-transparent border-none p-0 focus:ring-0 cursor-pointer hover:underline mb-4"
+                                            value={member.role || "Team Member"}
+                                            onChange={(e) => handleUpdateRole(member.id, e.target.value)}
+                                        >
+                                            <option value="Admin">Admin</option>
+                                            <option value="Producer">Producer</option>
+                                            <option value="Creative Director">Creative Director</option>
+                                            <option value="Art Director">Art Director</option>
+                                            <option value="Project Manager">Project Manager</option>
+                                            <option value="Finance Manager">Finance Manager</option>
+                                            <option value="Team Member">Team Member</option>
+                                        </select>
+                                    ) : (
+                                        <p className="text-sm text-primary font-medium mb-4">{member.role || "Team Member"}</p>
+                                    )}
 
                                     {isOnline && activeProject && (
                                         <div className="mb-4 bg-muted/50 rounded-md p-3 border border-border/50 animate-in slide-in-from-top-2 duration-300">

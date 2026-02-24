@@ -10,37 +10,37 @@ const teamMembers = [
         name: "Godfrey Kambewa",
         role: "Managing Director / Agency Lead",
         bio: "Leads Tavari’s overall vision and direction, working closely with clients and partners to turn ideas into meaningful strategies. He focuses on building strong relationships and ensuring the agency delivers work that creates real impact.",
-        image: "/images/team/placeholder-1.jpg",
+        image: "/images/team/team_member_1.png",
     },
     {
         name: "Lumbani Phiri",
         role: "Operations & Project Manager",
         bio: "Lumbani keeps everything running smoothly. From timelines to coordination, he ensures projects stay on track and teams have what they need to deliver quality work efficiently.",
-        image: "/images/team/placeholder-2.jpg",
+        image: "/images/team/team_member_2.png",
     },
     {
         name: "Ishmael Assan",
         role: "Creative Director",
         bio: "Ishmael shapes Tavari’s creative direction, translating ideas and insights into compelling visual and creative outcomes. He leads the creative process with a strong focus on storytelling, culture, and design quality.",
-        image: "/images/team/placeholder-3.jpg",
+        image: "/images/team/team_member_3.png",
     },
     {
         name: "Martinez Chakwawa",
         role: "Graphic Designer",
         bio: "Martinez brings ideas to life through thoughtful and clean visual design. He focuses on creating graphics that are clear, engaging, and aligned with Tavari’s brand and client goals.",
-        image: "/images/team/placeholder-4.jpg",
+        image: "/images/team/team_member_4.png",
     },
     {
         name: "Senzangakhona Nkunika",
         role: "Product Developer",
         bio: "Senza designs and builds Tavari’s digital products and platforms. He focuses on creating functional, user-friendly experiences while ensuring the technology supports the brand’s long-term vision.",
-        image: "/images/team/placeholder-1.jpg",
+        image: "/images/team/team_member_1.png",
     },
     {
         name: "Victor Roman Zgambo",
         role: "Finance & Administration Officer",
         bio: "Victor oversees finance and administration, ensuring the agency operates responsibly and sustainably. He supports the team by managing budgets, records, and internal systems.",
-        image: "/images/team/placeholder-2.jpg",
+        image: "/images/team/team_member_2.png",
     },
 ]
 

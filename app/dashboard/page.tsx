@@ -11,7 +11,9 @@ import { toast } from "sonner"
 
 export default function DashboardPage() {
     const { user } = useAuth()
+    const [userProfile, setUserProfile] = useState<any>(null)
     const firstName = user?.displayName ? user.displayName.split(' ')[0] : "Team"
+    const isAdmin = userProfile?.role?.toLowerCase() === 'admin'
 
     const [stats, setStats] = useState([
         { label: "Active Projects", value: "...", trend: "Live", icon: Clock, color: "text-blue-400" },
@@ -22,12 +24,21 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if (!user) return
+
+        // 0. Fetch User Profile for Role context
+        const unsubProfile = onSnapshot(doc(db, "profiles", user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                setUserProfile(docSnap.data())
+            }
+        }, (error) => console.error("Dashboard Profile Listener Error:", error))
+
         // 1. Projects Count & Recent List
         const qRecent = query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(5))
         const unsubProjects = onSnapshot(collection(db, "projects"), (snapshot) => {
             setStats(prev => prev.map(s => s.label === "Active Projects" ? { ...s, value: snapshot.size.toString() } : s))
             setLoading(false)
-        })
+        }, (error) => console.error("Dashboard Projects Listener Error:", error))
 
         const unsubRecent = onSnapshot(qRecent, (snapshot) => {
             const projs: any[] = []
@@ -40,27 +51,28 @@ export default function DashboardPage() {
                 })
             })
             setRecentProjects(projs)
-        })
+        }, (error) => console.error("Dashboard Recent Projects Listener Error:", error))
 
         // 2. Presence Count
         const unsubPresence = onSnapshot(query(collection(db, "presence"), where("status", "==", "online")), (snapshot) => {
             const count = snapshot.size
             setStats(prev => prev.map(s => s.label === "Team Members" ? { ...s, value: count.toString() } : s))
-        })
+        }, (error) => console.error("Dashboard Presence Listener Error:", error))
 
         // 3. Pending Requests
         const unsubRequests = onSnapshot(query(collection(db, "fund_requests"), where("status", "==", "pending")), (snapshot) => {
             const count = snapshot.size
             setStats(prev => prev.map(s => s.label === "Fund Requests" ? { ...s, value: count.toString() } : s))
-        })
+        }, (error) => console.error("Dashboard Requests Listener Error:", error))
 
         return () => {
+            unsubProfile()
             unsubProjects()
             unsubRecent()
             unsubPresence()
             unsubRequests()
         }
-    }, [])
+    }, [user])
 
     const PROJECT_STATUSES = ["Discovery", "Planning", "Production", "Review", "Delivered"]
 
@@ -80,10 +92,24 @@ export default function DashboardPage() {
         <div className="space-y-8">
             {/* Page Title */}
             <div>
-                <h2 className="text-3xl font-light tracking-tight">Operations Overview</h2>
-                <p className="text-muted-foreground text-sm font-body mt-1">
-                    Welcome back, {firstName}. Here's what's happening at Tavari today.
-                </p>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-3xl font-light tracking-tight">Operations Overview</h2>
+                        <p className="text-muted-foreground text-sm font-body mt-1">
+                            Welcome back, {firstName}. Here's what's happening at Tavari today.
+                        </p>
+                    </div>
+                    {isAdmin && (
+                        <div className="flex gap-2">
+                            <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-primary/20 transition-colors">
+                                Admin Settings
+                            </button>
+                            <button className="px-4 py-2 bg-muted text-foreground border border-border rounded-md text-xs font-bold uppercase tracking-widest hover:bg-muted/80 transition-colors text-[10px]">
+                                Export OS Log
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Stats Grid */}

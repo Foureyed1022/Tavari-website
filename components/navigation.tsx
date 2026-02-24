@@ -35,31 +35,31 @@ export function Navigation() {
           <div className="hidden md:flex items-center gap-12">
             <Link
               href="/about"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
             >
               About
             </Link>
             <Link
               href="/services"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
             >
               Services
             </Link>
             <Link
               href="/production"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
             >
               Production
             </Link>
             <Link
               href="/work"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
             >
               Work
             </Link>
             <Link
               href="/contact"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
             >
               Contact
             </Link>
@@ -98,35 +98,35 @@ export function Navigation() {
           <div className="md:hidden pt-6 pb-4 flex flex-col gap-4">
             <Link
               href="/about"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link
               href="/services"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
               onClick={() => setIsMenuOpen(false)}
             >
               Services
             </Link>
             <Link
               href="/production"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
               onClick={() => setIsMenuOpen(false)}
             >
               Production
             </Link>
             <Link
               href="/work"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
               onClick={() => setIsMenuOpen(false)}
             >
               Work
             </Link>
             <Link
               href="/contact"
-              className="text-sm tracking-wide text-primary hover:text-primary-foreground/80 transition-colors font-body uppercase"
+              className={`text-sm tracking-wide ${isHome ? "text-white" : "text-primary"} hover:opacity-80 transition-opacity font-body uppercase`}
               onClick={() => setIsMenuOpen(false)}
             >
               Contact

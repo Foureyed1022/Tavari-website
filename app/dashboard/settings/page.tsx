@@ -254,6 +254,22 @@ export default function SettingsPage() {
                                 />
                             </div>
                             <div className="space-y-2">
+                                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Account Type</label>
+                                <div className="flex items-center gap-3 bg-muted/10 border border-border/50 rounded-md px-3 py-2">
+                                    <span className={`text-xs font-bold uppercase tracking-wider ${profile.role?.toLowerCase() === 'admin' ? 'text-primary' : 'text-muted-foreground'}`}>
+                                        {profile.role?.toLowerCase() === 'admin' ? 'Administrator' : 'Standard Member'}
+                                    </span>
+                                    {profile.role?.toLowerCase() === 'admin' && (
+                                        <span className="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-bold">FULL ACCESS</span>
+                                    )}
+                                </div>
+                                {profile.role?.toLowerCase() === 'admin' && (
+                                    <p className="text-[10px] text-muted-foreground italic mt-1">
+                                        As an administrator, you can manage team roles and permissions in the <a href="/dashboard/team" className="text-primary hover:underline">Team Directory</a>.
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
                                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email Address (Read-only)</label>
                                 <input
                                     type="email"

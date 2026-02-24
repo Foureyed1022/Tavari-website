@@ -38,8 +38,8 @@ export function HeroSection() {
                 >
                     <source src="/ta.mp4" type="video/mp4" />
                 </video>
-                {/* Overlay for readability */}
-                <div className="absolute inset-0 bg-background/70" />
+                {/* Overlay for readability - Gradient for better blending and contrast */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60 backdrop-blur-[2px]" />
             </motion.div>
 
             {/* AI Sheen Effect - kept separate or integrated */}
@@ -54,7 +54,7 @@ export function HeroSection() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 <motion.h1
-                    className="text-5xl md:text-8xl font-light tracking-tight mb-8 leading-tight italic"
+                    className="text-5xl md:text-8xl font-light tracking-tight mb-8 leading-tight italic drop-shadow-2xl text-white"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.5 }}
@@ -65,7 +65,7 @@ export function HeroSection() {
                 </motion.h1>
 
                 <motion.p
-                    className="text-xl md:text-2xl font-body max-w-3xl mx-auto mb-12 leading-relaxed text-muted-foreground"
+                    className="text-xl md:text-2xl font-body max-w-3xl mx-auto mb-12 leading-relaxed text-white/90 drop-shadow-lg"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
