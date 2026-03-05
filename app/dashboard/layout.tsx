@@ -174,6 +174,7 @@ export default function DashboardLayout({
         events: "bg-emerald-500",
         talent: "bg-orange-500",
         consultancy: "bg-slate-500",
+        software: "bg-cyan-500",
     }
 
     const serviceLines = DEPARTMENTS.map(dept => ({

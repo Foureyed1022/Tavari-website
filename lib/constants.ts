@@ -7,6 +7,7 @@ export const DEPARTMENTS = [
     { id: "events", name: "Events & Activations" },
     { id: "talent", name: "Talent Management" },
     { id: "consultancy", name: "Consultancy & Research" },
+    { id: "software", name: "Software Engineering & Dev" },
     { id: "finance", name: "Finance & Accounts" },
 ] as const;
 
