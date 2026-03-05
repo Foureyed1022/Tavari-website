@@ -45,7 +45,7 @@ export function ServicesSection() {
             deliverables: ["Websites", "Mobile apps", "Web apps"],
             gradient: "from-slate-950 to-slate-900",
             border: "border-r border-b",
-            image: "/web.jpeg",
+            image: "/Web.jpeg",
         },
         {
             title: "PR & Communications",
