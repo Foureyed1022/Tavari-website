@@ -55,6 +55,7 @@ export async function sendMessageWithAttachment(
             lastMessage: {
                 text: text || `📎 ${attachment.name}`,
                 senderId,
+                senderName,
                 timestamp: serverTimestamp()
             },
             updatedAt: serverTimestamp()

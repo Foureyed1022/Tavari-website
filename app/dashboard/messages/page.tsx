@@ -25,6 +25,7 @@ export default function MessagesPage() {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const notifiedMessagesRef = useRef<Set<string>>(new Set())
 
     // Fetch team members for DM creation
     useEffect(() => {
@@ -69,6 +70,32 @@ export default function MessagesPage() {
 
         return () => unsubscribe()
     }, [user])
+
+    // Real-time message notifications
+    useEffect(() => {
+        if (!user || conversations.length === 0) return
+
+        conversations.forEach(convo => {
+            const lastMsg = convo.lastMessage
+            if (lastMsg && lastMsg.senderId !== user.uid && lastMsg.timestamp) {
+                const msgId = `${convo.id}_${lastMsg.timestamp.seconds}`
+                if (!notifiedMessagesRef.current.has(msgId)) {
+                    // Only notify if the message is recent (within last 10 seconds)
+                    const now = Math.floor(Date.now() / 1000)
+                    if (now - lastMsg.timestamp.seconds < 10) {
+                        toast(lastMsg.senderName || "New Message", {
+                            description: lastMsg.text,
+                            action: {
+                                label: "View",
+                                onClick: () => setSelectedConversation(convo)
+                            }
+                        })
+                    }
+                    notifiedMessagesRef.current.add(msgId)
+                }
+            }
+        })
+    }, [conversations, user])
 
     // Fetch messages for selected conversation
     useEffect(() => {
@@ -247,6 +274,7 @@ export default function MessagesPage() {
                 lastMessage: {
                     text: newMessage,
                     senderId: user.uid,
+                    senderName: user.displayName || user.email,
                     timestamp: serverTimestamp()
                 },
                 updatedAt: serverTimestamp()
@@ -439,20 +467,25 @@ export default function MessagesPage() {
 
                         {/* Messages */}
                         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                            {messages.map((msg) => {
+                            {messages.map((msg, index) => {
                                 const isOwn = msg.senderId === user?.uid
+                                const prevMsg = messages[index - 1]
+                                const showSenderInfo = !prevMsg || prevMsg.senderId !== msg.senderId
+
                                 return (
-                                    <div key={msg.id} className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                                        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                                    <div key={msg.id} className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : ''} ${!showSenderInfo ? '-mt-2' : ''}`}>
+                                        <div className={`w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium flex-shrink-0 ${!showSenderInfo ? 'opacity-0 select-none pointer-events-none' : ''}`}>
                                             {msg.senderName?.charAt(0) || "?"}
                                         </div>
                                         <div className={`flex-1 ${isOwn ? 'text-right' : ''}`}>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-sm font-medium">{msg.senderName}</span>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {msg.timestamp && new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </span>
-                                            </div>
+                                            {showSenderInfo && (
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    {!isOwn && <span className="text-sm font-medium">{msg.senderName}</span>}
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {msg.timestamp && new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </div>
+                                            )}
                                             <div className="group relative inline-block">
                                                 <div className={`px-4 py-2 rounded-lg ${isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'
                                                     }`}>
@@ -524,13 +557,19 @@ export default function MessagesPage() {
 
                             {/* Typing Indicator */}
                             {typingUsers.length > 0 && (
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground italic">
-                                    <div className="flex gap-1">
-                                        <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                        <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                        <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                                    </div>
-                                    <span>{typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...</span>
+                                <div className="flex flex-col gap-2">
+                                    {typingUsers.map((name, i) => (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                                                {name.charAt(0)}
+                                            </div>
+                                            <div className="bg-muted px-4 py-2.5 rounded-2xl rounded-tl-none flex gap-1">
+                                                <span className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                <span className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                <span className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
 
