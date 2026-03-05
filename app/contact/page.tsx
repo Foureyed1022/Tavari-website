@@ -80,7 +80,7 @@ export default function ContactPage() {
                 href="mailto:partnerships@tavari.com"
                 className="text-muted-foreground font-body hover:text-foreground transition-colors"
               >
-                partnerships@tavari.com
+                info@tavariconnect.site
               </a>
             </div>
 
@@ -93,7 +93,7 @@ export default function ContactPage() {
                 href="tel:+1234567890"
                 className="text-muted-foreground font-body hover:text-foreground transition-colors"
               >
-                +1 (234) 567-8900
+                +265 996 263 843
               </a>
             </div>
 
