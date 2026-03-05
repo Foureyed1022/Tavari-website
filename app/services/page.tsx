@@ -175,7 +175,7 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
             <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/production-capabilities.svg"
+                src="/media.png"
                 alt="Production Capabilities"
                 width={600}
                 height={400}
@@ -236,7 +236,7 @@ export default function ServicesPage() {
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/cultural-experience.svg"
+                src="/content.jpeg"
                 alt="Cultural Experience Design"
                 width={600}
                 height={400}
@@ -249,7 +249,7 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-24 items-center">
             <div className="h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/events-experience.svg"
+                src="/event.png"
                 alt="Events & Experience Design"
                 width={600}
                 height={400}
@@ -310,7 +310,7 @@ export default function ServicesPage() {
             </div>
             <div className="order-1 md:order-2 h-[500px] bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageWithFallback
-                src="/images/merchandise-design.svg"
+                src="/merch.png"
                 alt="Merchandise Design"
                 width={600}
                 height={400}

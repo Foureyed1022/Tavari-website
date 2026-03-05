@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, Target, Lightbulb, Camera } from "lucide-react"
+import { ArrowRight, Target, Lightbulb, Camera, Monitor } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
@@ -61,11 +61,11 @@ export default function HomePage() {
             <ScrollReveal delay={0.3}>
               <div className="text-center">
                 <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Camera className="h-8 w-8 text-foreground" />
+                  <Monitor className="h-8 w-8 text-foreground" />
                 </div>
-                <h3 className="text-2xl font-light mb-4">Creative Production</h3>
+                <h3 className="text-2xl font-light mb-4">Web & App Development</h3>
                 <p className="text-muted-foreground font-body text-sm leading-relaxed">
-                  We handle the making of everything—photos, videos, websites, and more—so your brand looks great everywhere.
+                  We build custom web experiences tailored to your brand, ensuring performance, design, and seamless user interaction.
                 </p>
               </div>
             </ScrollReveal>
@@ -112,7 +112,7 @@ export default function HomePage() {
             <ScrollReveal delay={0.2}>
               <div className="h-80 bg-muted rounded-lg flex items-center justify-center order-2 md:order-1 overflow-hidden">
                 <ImageWithFallback
-                  src="/images/creative-execution-home.svg"
+                  src="/showcase.png"
                   alt="Creative Execution Showcase"
                   width={500}
                   height={320}
@@ -142,7 +142,7 @@ export default function HomePage() {
       <PromiseSection />
 
       {/* Team Section */}
-      <TeamSection />
+      {/* <TeamSection /> */}
 
       {/* CTA Section */}
       <section className="py-32 px-6">

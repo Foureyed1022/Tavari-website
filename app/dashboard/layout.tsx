@@ -63,11 +63,17 @@ export default function DashboardLayout({
     useEffect(() => {
         if (!user) return
 
+        // Determine if user should see finance notifications
+        const recipientIds = [user.uid]
+        const role = userProfile?.role?.toLowerCase()
+        if (role === 'admin' || role === 'finance manager' || userProfile?.department === 'finance') {
+            recipientIds.push('finance')
+        }
+
         // 2. Subscribe to Notifications
-        // Fetch and sort client-side to avoid requiring composite indexes
         const q = query(
             collection(db, "notifications"),
-            where("recipientId", "in", [user.uid, 'finance']),
+            where("recipientId", "in", recipientIds),
             limit(50)
         )
 
@@ -87,13 +93,11 @@ export default function DashboardLayout({
             setNotifications(notifs.slice(0, 20))
         }, (error) => {
             console.error("DashboardLayout Notifications Listener Error:", error)
-            // If the failure is due to 'finance' query, we might want to split the queries
-            // but for now, we just handle the error gracefully
             setNotifications([])
         })
 
         return () => unsubscribe()
-    }, [user])
+    }, [user, userProfile])
 
     const unreadCount = notifications.filter(n => !n.read).length
 

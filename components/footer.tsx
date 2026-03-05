@@ -85,7 +85,7 @@ export function Footer() {
                   href="mailto:partnerships@tavari.com"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
                 >
-                  partnerships@tavari.com
+                  info@tavariconnect.site
                 </a>
               </li>
               <li>

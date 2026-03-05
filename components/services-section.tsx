@@ -13,6 +13,7 @@ export function ServicesSection() {
             deliverables: ["Brand toolkits", "Strategy decks", "Campaign plans"],
             gradient: "from-slate-900 to-slate-800",
             border: "border-r border-b",
+            image: "/market.jpeg",
         },
         {
             title: "Creative Design & Content",
@@ -20,6 +21,7 @@ export function ServicesSection() {
             deliverables: ["Marketing collateral", "Digital assets", "Creative packs"],
             gradient: "from-zinc-900 to-zinc-800",
             border: "border-r border-b",
+            image: "/brand.png",
         },
         {
             title: "Audio-Visual Production",
@@ -27,6 +29,7 @@ export function ServicesSection() {
             deliverables: ["TVCs & Films", "Edited videos", "Photo libraries"],
             gradient: "from-neutral-900 to-neutral-800",
             border: "border-b",
+            image: "/audio.png",
         },
         {
             title: "Digital Marketing & Media",
@@ -34,20 +37,31 @@ export function ServicesSection() {
             deliverables: ["Content calendars", "Ad reports", "Influencer packages"],
             gradient: "from-stone-900 to-stone-800",
             border: "border-r border-b",
+            image: "/social.jpeg",
+        },
+        {
+            title: "Web & App Development",
+            description: "Custom web development, mobile applications, and digital product design.",
+            deliverables: ["Websites", "Mobile apps", "Web apps"],
+            gradient: "from-slate-950 to-slate-900",
+            border: "border-r border-b",
+            image: "/web.jpeg",
         },
         {
             title: "PR & Communications",
             description: "Media relations, reputation management, and strategic press monitoring.",
             deliverables: ["Press kits", "Media reports", "PR summaries"],
-            gradient: "from-slate-950 to-slate-900",
-            border: "border-r border-b",
+            gradient: "from-stone-900 to-stone-800",
+            border: "border-b",
+            image: "/Pr.jpeg",
         },
         {
             title: "Events & Activations",
             description: "Memorable brand experiences, product launches, and cultural event execution.",
             deliverables: ["Concepts", "Activation toolkits", "Recap reports"],
             gradient: "from-zinc-950 to-zinc-900",
-            border: "border-b",
+            border: "border-r border-b",
+            image: "/planning.jpg",
         },
         {
             title: "Talent Management",
@@ -55,6 +69,7 @@ export function ServicesSection() {
             deliverables: ["Talent portfolios", "Engagement reports"],
             gradient: "from-neutral-950 to-neutral-900",
             border: "border-r",
+            image: "/Talent.jpeg",
         },
         {
             title: "Consultancy & Research",
@@ -62,6 +77,7 @@ export function ServicesSection() {
             deliverables: ["Training manuals", "Research reports", "Assessments"],
             gradient: "from-stone-950 to-stone-900",
             border: "border-r",
+            image: "/Consulta.jpeg",
         }
     ]
 
@@ -82,7 +98,17 @@ export function ServicesSection() {
                         {services.map((service, index) => (
                             <ScrollReveal key={index} delay={index * 0.1} className={`group relative aspect-[3/4] overflow-hidden ${service.border} border-border/20`}>
                                 <div className="absolute inset-0 bg-muted">
-                                    <div className={`w-full h-full bg-gradient-to-br ${service.gradient}`} />
+                                    {service.image ? (
+                                        <ImageWithFallback
+                                            src={service.image}
+                                            alt={service.title}
+                                            width={800}
+                                            height={1000}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className={`w-full h-full bg-gradient-to-br ${service.gradient}`} />
+                                    )}
                                 </div>
                                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
 
@@ -110,17 +136,6 @@ export function ServicesSection() {
                             </ScrollReveal>
                         ))}
 
-                        {/* Image Card */}
-                        <ScrollReveal delay={0.8} className="group relative aspect-[3/4] overflow-hidden bg-background">
-                            <ImageWithFallback
-                                src="/images/creative-production-process.svg"
-                                alt="Creative Production Process"
-                                width={800}
-                                height={1000}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
-                        </ScrollReveal>
                     </div>
                 </div>
             </div>

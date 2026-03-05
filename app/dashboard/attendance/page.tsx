@@ -137,9 +137,11 @@ export default function AttendancePage() {
     const departments = DEPARTMENTS
     const isPowerUser = ['admin', 'CEO', 'Finance Manager'].includes(userProfile?.role)
 
-    const availableProjects = selectedDept
-        ? projects.filter(p => p.department === selectedDept)
-        : []
+    const availableProjects = selectedDept === "all"
+        ? projects
+        : selectedDept
+            ? projects.filter(p => p.department === selectedDept)
+            : []
 
     const handleClockIn = async () => {
         if (!user) return
@@ -147,7 +149,16 @@ export default function AttendancePage() {
         try {
             const sessionRef = doc(db, "sessions", user.uid)
             const projectToSave = workMode === 'project' ? selectedProject : "General / Agency Work"
-            const deptToSave = workMode === 'project' ? selectedDept : (userProfile?.department || "Unassigned")
+
+            let deptToSave = userProfile?.department || "Unassigned"
+            if (workMode === 'project') {
+                if (selectedDept && selectedDept !== "all") {
+                    deptToSave = selectedDept
+                } else {
+                    const proj = projects.find(p => (p.client + " - " + (p.project || "Unnamed Project")) === selectedProject)
+                    if (proj?.department) deptToSave = proj.department
+                }
+            }
 
             await setDoc(sessionRef, {
                 userId: user.uid,
@@ -347,13 +358,13 @@ export default function AttendancePage() {
                                                 <select
                                                     className="w-full bg-muted/30 border border-border rounded-md px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70 disabled:grayscale-[0.5]"
                                                     value={selectedDept}
-                                                    disabled={!isPowerUser}
                                                     onChange={(e) => {
                                                         setSelectedDept(e.target.value)
                                                         setSelectedProject("General / Agency Work")
                                                     }}
                                                 >
                                                     <option value="">Select Dept...</option>
+                                                    <option value="all">All Departments</option>
                                                     {departments.map(dept => (
                                                         <option key={dept.id} value={dept.id}>{dept.name}</option>
                                                     ))}
