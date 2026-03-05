@@ -21,6 +21,8 @@ import {
 } from "firebase/firestore"
 import { toast } from "sonner"
 import { DEPARTMENTS } from "@/lib/constants"
+import { sendNotification } from "@/lib/notifications"
+import { X } from "lucide-react"
 
 export default function AttendancePage() {
     const { user } = useAuth()
@@ -32,6 +34,22 @@ export default function AttendancePage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [eodReport, setEodReport] = useState("")
     const [userProfile, setUserProfile] = useState<any>(null)
+
+    // Leave & Overtime State
+    const [showLeaveModal, setShowLeaveModal] = useState(false)
+    const [showOvertimeModal, setShowOvertimeModal] = useState(false)
+    const [leaveRequest, setLeaveRequest] = useState({
+        type: "Sick Leave",
+        startDate: "",
+        endDate: "",
+        reason: ""
+    })
+    const [overtimeRequest, setOvertimeRequest] = useState({
+        date: new Date().toISOString().split('T')[0],
+        hours: "1",
+        project: "General / Agency Work",
+        reason: ""
+    })
 
     const [projects, setProjects] = useState<any[]>([])
 
@@ -277,6 +295,68 @@ export default function AttendancePage() {
         }
     }
 
+    const handleSubmitLeave = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!user) return
+
+        setIsSubmitting(true)
+        try {
+            await addDoc(collection(db, "leave_requests"), {
+                userId: user.uid,
+                userName: user.displayName || user.email,
+                ...leaveRequest,
+                status: "pending",
+                createdAt: serverTimestamp()
+            })
+
+            // Notify Management
+            await sendNotification(
+                'finance',
+                "New Leave Request",
+                `${user.displayName || user.email} requested ${leaveRequest.type} from ${leaveRequest.startDate} to ${leaveRequest.endDate}.`,
+                'system'
+            )
+
+            toast.success("Leave request submitted")
+            setShowLeaveModal(false)
+        } catch (error) {
+            toast.error("Failed to submit leave request")
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    const handleSubmitOvertime = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!user) return
+
+        setIsSubmitting(true)
+        try {
+            await addDoc(collection(db, "overtime_requests"), {
+                userId: user.uid,
+                userName: user.displayName || user.email,
+                ...overtimeRequest,
+                status: "pending",
+                createdAt: serverTimestamp()
+            })
+
+            // Notify Management
+            await sendNotification(
+                'finance',
+                "New Overtime Request",
+                `${user.displayName || user.email} requested ${overtimeRequest.hours} hours for ${overtimeRequest.project}.`,
+                'system'
+            )
+
+            toast.success("Overtime request submitted")
+            setShowOvertimeModal(false)
+        } catch (error) {
+            toast.error("Failed to submit overtime request")
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
     const [mounted, setMounted] = useState(false)
     const [currentTime, setCurrentTime] = useState(new Date())
 
@@ -421,11 +501,17 @@ export default function AttendancePage() {
 
                     {/* Quick Actions */}
                     <div className="grid grid-cols-2 gap-4">
-                        <button className="p-4 bg-card border border-border/50 rounded-lg hover:border-border hover:bg-muted/50 transition-colors text-left group">
+                        <button
+                            onClick={() => setShowLeaveModal(true)}
+                            className="p-4 bg-card border border-border/50 rounded-lg hover:border-border hover:bg-muted/50 transition-colors text-left group"
+                        >
                             <FileText className="h-5 w-5 text-primary mb-2 group-hover:scale-110 transition-transform" />
                             <span className="block text-sm font-medium">Request Leave</span>
                         </button>
-                        <button className="p-4 bg-card border border-border/50 rounded-lg hover:border-border hover:bg-muted/50 transition-colors text-left group">
+                        <button
+                            onClick={() => setShowOvertimeModal(true)}
+                            className="p-4 bg-card border border-border/50 rounded-lg hover:border-border hover:bg-muted/50 transition-colors text-left group"
+                        >
                             <Clock className="h-5 w-5 text-primary mb-2 group-hover:scale-110 transition-transform" />
                             <span className="block text-sm font-medium">Overtime</span>
                         </button>
@@ -521,6 +607,148 @@ export default function AttendancePage() {
                     </form>
                 </div>
             </div>
+
+            {/* Leave Request Modal */}
+            {showLeaveModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setShowLeaveModal(false)} />
+                    <div className="bg-card w-full max-w-md border border-border rounded-lg shadow-2xl relative z-10 animate-in zoom-in-95 duration-200">
+                        <div className="p-4 border-b border-border flex items-center justify-between">
+                            <h3 className="font-medium">Request Leave</h3>
+                            <button onClick={() => setShowLeaveModal(false)} className="p-1 hover:bg-muted rounded-md transition-colors">
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSubmitLeave} className="p-4 space-y-4">
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Leave Type</label>
+                                <select
+                                    className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={leaveRequest.type}
+                                    onChange={(e) => setLeaveRequest({ ...leaveRequest, type: e.target.value })}
+                                    required
+                                >
+                                    <option>Sick Leave</option>
+                                    <option>Annual Leave</option>
+                                    <option>Special Leave</option>
+                                    <option>Unpaid Leave</option>
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Start Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        value={leaveRequest.startDate}
+                                        onChange={(e) => setLeaveRequest({ ...leaveRequest, startDate: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">End Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        value={leaveRequest.endDate}
+                                        onChange={(e) => setLeaveRequest({ ...leaveRequest, endDate: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Reason / Remarks</label>
+                                <textarea
+                                    className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="Briefly explain the reason..."
+                                    value={leaveRequest.reason}
+                                    onChange={(e) => setLeaveRequest({ ...leaveRequest, reason: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full py-2.5 bg-primary text-primary-foreground rounded-md text-sm font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50"
+                            >
+                                {isSubmitting ? "Submitting..." : "Submit Request"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Overtime Modal */}
+            {showOvertimeModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setShowOvertimeModal(false)} />
+                    <div className="bg-card w-full max-w-md border border-border rounded-lg shadow-2xl relative z-10 animate-in zoom-in-95 duration-200">
+                        <div className="p-4 border-b border-border flex items-center justify-between">
+                            <h3 className="font-medium">Request Overtime</h3>
+                            <button onClick={() => setShowOvertimeModal(false)} className="p-1 hover:bg-muted rounded-md transition-colors">
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSubmitOvertime} className="p-4 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</label>
+                                    <input
+                                        type="date"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        value={overtimeRequest.date}
+                                        onChange={(e) => setOvertimeRequest({ ...overtimeRequest, date: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Hours</label>
+                                    <input
+                                        type="number"
+                                        min="0.5"
+                                        step="0.5"
+                                        className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                        value={overtimeRequest.hours}
+                                        onChange={(e) => setOvertimeRequest({ ...overtimeRequest, hours: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Project</label>
+                                <select
+                                    className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                    value={overtimeRequest.project}
+                                    onChange={(e) => setOvertimeRequest({ ...overtimeRequest, project: e.target.value })}
+                                    required
+                                >
+                                    <option>General / Agency Work</option>
+                                    {projects.map(p => (
+                                        <option key={p.id}>{p.client} - {p.project}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Reason / Scope</label>
+                                <textarea
+                                    className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="What tasks will you be completing?"
+                                    value={overtimeRequest.reason}
+                                    onChange={(e) => setOvertimeRequest({ ...overtimeRequest, reason: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full py-2.5 bg-primary text-primary-foreground rounded-md text-sm font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50"
+                            >
+                                {isSubmitting ? "Submitting..." : "Submit Request"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
