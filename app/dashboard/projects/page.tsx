@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Search, Filter, MoreHorizontal, Plus, Loader2 } from "lucide-react"
 import { db } from "@/lib/firebase"
-import { collection, query, onSnapshot, orderBy, where, serverTimestamp, addDoc, updateDoc, doc } from "firebase/firestore"
+import { collection, query, onSnapshot, orderBy, where, serverTimestamp, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore"
 import { toast } from "sonner"
 import { DEPARTMENTS, getDepartmentName } from "@/lib/constants"
 import { useAuth } from "@/contexts/AuthContext"
@@ -21,6 +21,7 @@ export default function ProjectsPage() {
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
     const [newProject, setNewProject] = useState({
         client: "",
         project: "",
@@ -44,30 +45,15 @@ export default function ProjectsPage() {
         return () => unsub()
     }, [user])
 
-    const isPowerUser = ['admin', 'CEO', 'Finance Manager'].includes(userProfile?.role)
+    const isPowerUser = ['admin', 'ceo', 'operations', 'finance manager'].includes(userProfile?.role?.toLowerCase())
     const canEditDepartment = (deptId: string) => {
         if (isPowerUser) return true
         return userProfile?.department === deptId
     }
 
-    const isViewOnly = departmentFilter ? !canEditDepartment(departmentFilter) : false
+    const isViewOnly = (departmentFilter ? !canEditDepartment(departmentFilter) : false) && !isPowerUser
 
-    const handleSeedData = async () => {
-        const mockProjs = [
-            { client: "Nebula Tech", project: "Rebrand & Website", department: "strategy", lead: "Godfrey Kambewa", status: "Production", deadline: "Feb 15, 2026", budget: 12000000, spent: 8500000, createdAt: serverTimestamp() },
-            { client: "Malawi Tourism", project: "Destination Campaign", department: "campaigns", lead: "Lumbani Phiri", status: "Review", deadline: "Feb 12, 2026", budget: 25000000, spent: 22100000, createdAt: serverTimestamp() },
-            { client: "Music Video: 'Roots'", project: "Video Production", department: "production", lead: "Lumbani Phiri", status: "Planning", deadline: "Apr 15, 2026", budget: 18000000, spent: 1500000, createdAt: serverTimestamp() },
-        ]
 
-        try {
-            for (const p of mockProjs) {
-                await addDoc(collection(db, "projects"), p)
-            }
-            toast.success("Seeded successfully")
-        } catch (e) {
-            toast.error("Seed failed")
-        }
-    }
 
     const handleCreateProject = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -147,6 +133,19 @@ export default function ProjectsPage() {
         }
     }
 
+    const handleDeleteProject = async (projectId: string) => {
+        if (!window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) return
+
+        try {
+            await deleteDoc(doc(db, "projects", projectId))
+            toast.success("Project deleted successfully")
+            setActiveMenuId(null)
+        } catch (e) {
+            console.error("Delete error:", e)
+            toast.error("Failed to delete project")
+        }
+    }
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -158,14 +157,7 @@ export default function ProjectsPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {projects.length === 0 && !loading && isPowerUser && (
-                        <button
-                            onClick={handleSeedData}
-                            className="px-4 py-2 bg-muted text-foreground text-sm font-medium rounded-md hover:bg-muted/80 transition-colors"
-                        >
-                            Seed Data
-                        </button>
-                    )}
+
                     <button className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground text-sm font-medium rounded-md hover:bg-muted/80 transition-colors">
                         <Filter className="h-4 w-4" />
                         Filter
@@ -266,10 +258,31 @@ export default function ProjectsPage() {
                                                 <StatusBadge status={project.status} />
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <button className="text-muted-foreground hover:text-foreground">
+                                        <td className="px-6 py-4 text-right relative">
+                                            <button
+                                                onClick={() => setActiveMenuId(activeMenuId === project.id ? null : project.id)}
+                                                className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted transition-colors"
+                                            >
                                                 <MoreHorizontal className="h-4 w-4" />
                                             </button>
+
+                                            {activeMenuId === project.id && (
+                                                <>
+                                                    <div
+                                                        className="fixed inset-0 z-10"
+                                                        onClick={() => setActiveMenuId(null)}
+                                                    />
+                                                    <div className="absolute right-6 top-10 w-32 bg-card border border-border rounded-md shadow-lg z-20 py-1 animate-in fade-in zoom-in duration-200">
+                                                        <button
+                                                            disabled={!isPowerUser}
+                                                            onClick={() => handleDeleteProject(project.id)}
+                                                            className="w-full text-left px-4 py-2 text-xs text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                            Delete Project
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
                                         </td>
                                     </tr>
                                 )))}

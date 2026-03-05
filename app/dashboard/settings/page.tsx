@@ -229,7 +229,7 @@ export default function SettingsPage() {
                                     <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Department</label>
                                     <select
                                         value={profile.department}
-                                        disabled={!['admin', 'CEO', 'Finance Manager'].includes(profile.role)}
+                                        disabled={!['admin', 'ceo', 'finance manager'].includes(profile.role?.toLowerCase() || '')}
                                         onChange={e => setProfile({ ...profile, department: e.target.value })}
                                         className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70 disabled:grayscale-[0.5]"
                                     >

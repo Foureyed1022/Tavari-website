@@ -234,20 +234,7 @@ export default function FinancePage() {
                     <div className="bg-card border border-border/50 rounded-lg p-6">
                         <h3 className="text-lg font-medium mb-6">Recent Transactions</h3>
                         <div className="space-y-4">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="flex items-center justify-between py-2 border-b border-border/30 last:border-none">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center">
-                                            <CreditCard className="h-4 w-4 text-muted-foreground" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium">Camera Rental - RED Komodo</p>
-                                            <p className="text-xs text-muted-foreground">Feb 0{i}, 2026 • Production</p>
-                                        </div>
-                                    </div>
-                                    <span className="text-sm font-mono text-foreground">- MK 450,000</span>
-                                </div>
-                            ))}
+                            <p className="text-xs text-muted-foreground italic text-center py-4">No recent transactions recorded.</p>
                         </div>
                     </div>
                 </div>

@@ -3,16 +3,18 @@
 import { useState, useEffect } from "react"
 import { ArrowUpRight, Clock, AlertCircle, CheckCircle2, MoreHorizontal, Loader2, Users, DollarSign } from "lucide-react"
 import { ImageWithFallback } from "@/components/ImageWithFallback"
+import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
 import { AnalyticsHub } from "@/components/dashboard/analytics-hub"
 import { db } from "@/lib/firebase"
-import { collection, onSnapshot, query, where, limit, orderBy, updateDoc, doc, serverTimestamp } from "firebase/firestore"
+import { collection, onSnapshot, query, where, limit, orderBy, updateDoc, doc, serverTimestamp, deleteDoc } from "firebase/firestore"
 import { toast } from "sonner"
 
 export default function DashboardPage() {
     const { user } = useAuth()
     const [userProfile, setUserProfile] = useState<any>(null)
     const firstName = user?.displayName ? user.displayName.split(' ')[0] : "Team"
+    const isPowerUser = ['admin', 'ceo', 'operations', 'finance manager'].includes(userProfile?.role?.toLowerCase())
     const isAdmin = userProfile?.role?.toLowerCase() === 'admin'
 
     const [stats, setStats] = useState([
@@ -22,6 +24,7 @@ export default function DashboardPage() {
     ])
     const [recentProjects, setRecentProjects] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
 
     useEffect(() => {
         if (!user) return
@@ -88,6 +91,19 @@ export default function DashboardPage() {
         }
     }
 
+    const handleDeleteProject = async (projectId: string) => {
+        if (!window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) return
+
+        try {
+            await deleteDoc(doc(db, "projects", projectId))
+            toast.success("Project deleted successfully")
+            setActiveMenuId(null)
+        } catch (e) {
+            console.error("Delete error:", e)
+            toast.error("Failed to delete project")
+        }
+    }
+
     return (
         <div className="space-y-8">
             {/* Page Title */}
@@ -101,9 +117,9 @@ export default function DashboardPage() {
                     </div>
                     {isAdmin && (
                         <div className="flex gap-2">
-                            <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-primary/20 transition-colors">
+                            <Link href="/dashboard/settings" className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-primary/20 transition-colors">
                                 Admin Settings
-                            </button>
+                            </Link>
                             <button className="px-4 py-2 bg-muted text-foreground border border-border rounded-md text-xs font-bold uppercase tracking-widest hover:bg-muted/80 transition-colors text-[10px]">
                                 Export OS Log
                             </button>
@@ -193,8 +209,9 @@ export default function DashboardPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <select
-                                            className="bg-transparent border-none p-0 text-xs font-medium focus:ring-0 cursor-pointer hover:underline"
+                                            className={`bg-transparent border-none p-0 text-xs font-medium focus:ring-0 ${isPowerUser ? 'cursor-pointer hover:underline' : 'cursor-default opacity-70'}`}
                                             value={project.status}
+                                            disabled={!isPowerUser}
                                             onChange={(e) => handleUpdateStatus(project.id, e.target.value)}
                                         >
                                             {PROJECT_STATUSES.map(status => (
@@ -207,10 +224,31 @@ export default function DashboardPage() {
                                             <StatusBadge status={project.status} />
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <button className="text-muted-foreground hover:text-foreground">
+                                    <td className="px-6 py-4 text-right relative">
+                                        <button
+                                            onClick={() => setActiveMenuId(activeMenuId === project.id ? null : project.id)}
+                                            className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted transition-colors"
+                                        >
                                             <MoreHorizontal className="h-4 w-4" />
                                         </button>
+
+                                        {activeMenuId === project.id && (
+                                            <>
+                                                <div
+                                                    className="fixed inset-0 z-10"
+                                                    onClick={() => setActiveMenuId(null)}
+                                                />
+                                                <div className="absolute right-6 top-10 w-32 bg-card border border-border rounded-md shadow-lg z-20 py-1 animate-in fade-in zoom-in duration-200">
+                                                    <button
+                                                        disabled={!isPowerUser}
+                                                        onClick={() => handleDeleteProject(project.id)}
+                                                        className="w-full text-left px-4 py-2 text-xs text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        Delete Project
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

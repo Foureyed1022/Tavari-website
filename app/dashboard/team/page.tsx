@@ -151,7 +151,7 @@ export default function TeamPage() {
                                             <div className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center">
                                                 <Phone className="h-4 w-4" />
                                             </div>
-                                            {member.phone || "+265 999 123 456"}
+                                            {member.phone || "No phone provided"}
                                         </div>
                                     </div>
 

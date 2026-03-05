@@ -5,8 +5,14 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        pathname: '**',
+      },
+    ],
   },
-
 }
 
 export default nextConfig

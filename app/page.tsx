@@ -98,7 +98,7 @@ export default function HomePage() {
             <ScrollReveal delay={0.2}>
               <div className="h-80 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                 <ImageWithFallback
-                  src="/strategy.png"
+                  src="/strategy.jpeg"
                   alt="Strategic Framework Visualization"
                   width={500}
                   height={320}
