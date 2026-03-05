@@ -43,6 +43,7 @@ export default function DashboardLayout({
     const [notifications, setNotifications] = useState<any[]>([])
     const [userProfile, setUserProfile] = useState<any>(null)
     const [showNotifications, setShowNotifications] = useState(false)
+    const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
 
     useEffect(() => {
         setMounted(true)
@@ -99,6 +100,28 @@ export default function DashboardLayout({
         return () => unsubscribe()
     }, [user, userProfile])
 
+    useEffect(() => {
+        if (!user) return
+
+        const q = query(
+            collection(db, "conversations"),
+            where("participants", "array-contains", user.uid)
+        )
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            let count = 0
+            snapshot.forEach((doc) => {
+                const data = doc.data()
+                if (data.lastMessage && !data.lastMessage.readBy?.includes(user.uid)) {
+                    count++
+                }
+            })
+            setUnreadMessagesCount(count)
+        })
+
+        return () => unsubscribe()
+    }, [user])
+
     const unreadCount = notifications.filter(n => !n.read).length
 
     const handleMarkAllRead = async () => {
@@ -134,7 +157,7 @@ export default function DashboardLayout({
         { name: "Workspace", href: "/dashboard/attendance", icon: CheckCircle2 },
         { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
         { name: "Projects", href: "/dashboard/projects", icon: Briefcase },
-        { name: "Messages", href: "/dashboard/messages", icon: MessageCircle },
+        { name: "Messages", href: "/dashboard/messages", icon: MessageCircle, badge: unreadMessagesCount },
         { name: "Finance", href: "/dashboard/finance", icon: DollarSign },
         { name: "Team", href: "/dashboard/team", icon: Users },
         { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
@@ -194,7 +217,12 @@ export default function DashboardLayout({
                                         }`}
                                 >
                                     <item.icon className="h-4 w-4" />
-                                    {item.name}
+                                    <span className="flex-1">{item.name}</span>
+                                    {item.badge !== undefined && item.badge > 0 && (
+                                        <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                            {item.badge}
+                                        </span>
+                                    )}
                                 </Link>
                             )
                         })}

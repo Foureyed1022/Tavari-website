@@ -124,8 +124,24 @@ export default function MessagesPage() {
             scrollToBottom()
         })
 
+        // Mark as read when selecting conversation
+        const markAsRead = async () => {
+            if (selectedConversation.lastMessage &&
+                !selectedConversation.lastMessage.readBy?.includes(user?.uid)) {
+                try {
+                    const convoRef = doc(db, "conversations", selectedConversation.id)
+                    await updateDoc(convoRef, {
+                        "lastMessage.readBy": arrayUnion(user?.uid)
+                    })
+                } catch (e) {
+                    console.error("Error marking as read:", e)
+                }
+            }
+        }
+        markAsRead()
+
         return () => unsubscribe()
-    }, [selectedConversation])
+    }, [selectedConversation, user])
 
     // Listen for typing indicators
     useEffect(() => {
@@ -275,7 +291,8 @@ export default function MessagesPage() {
                     text: newMessage,
                     senderId: user.uid,
                     senderName: user.displayName || user.email,
-                    timestamp: serverTimestamp()
+                    timestamp: serverTimestamp(),
+                    readBy: [user.uid]
                 },
                 updatedAt: serverTimestamp()
             })
