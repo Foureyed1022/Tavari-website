@@ -20,7 +20,7 @@ export default function WorkPage() {
         <div className="relative z-10 text-center max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-light tracking-tight mb-6">Selected Work</h1>
           <p className="text-lg md:text-xl font-body max-w-2xl mx-auto text-muted-foreground leading-relaxed">
-            Case studies demonstrating our approach to strategic brand development and creative production
+            Showcasing our approach to strategic brand development and creative production.
           </p>
         </div>
       </section>
@@ -28,8 +28,8 @@ export default function WorkPage() {
       {/* Case Studies Grid */}
       <section className="py-32 px-6">
         <div className="container mx-auto max-w-6xl">
+          {/* Case Studies Grid - Commented out for now
           <div className="grid md:grid-cols-2 gap-12 mb-24">
-            {/* Case Study 1 */}
             <div className="bg-muted rounded-lg p-8">
               <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                 <Target className="h-6 w-6 text-foreground" />
@@ -66,7 +66,6 @@ export default function WorkPage() {
               </Button>
             </div>
 
-            {/* Case Study 2 */}
             <div className="bg-muted rounded-lg p-8">
               <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                 <Lightbulb className="h-6 w-6 text-foreground" />
@@ -105,7 +104,6 @@ export default function WorkPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12">
-            {/* Case Study 3 */}
             <div className="bg-muted rounded-lg p-8">
               <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                 <Palette className="h-6 w-6 text-foreground" />
@@ -142,7 +140,6 @@ export default function WorkPage() {
               </Button>
             </div>
 
-            {/* Case Study 4 */}
             <div className="bg-muted rounded-lg p-8">
               <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-6">
                 <Target className="h-6 w-6 text-foreground" />
@@ -179,6 +176,7 @@ export default function WorkPage() {
               </Button>
             </div>
           </div>
+          */}
 
           <div className="text-center mt-20 pt-12 border-t border-border">
             <p className="text-lg text-muted-foreground font-body max-w-2xl mx-auto mb-8 leading-relaxed">

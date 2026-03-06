@@ -232,10 +232,10 @@ export default function ContactPage() {
                     className="w-full rounded-none border-2 border-input h-12 px-3 font-body bg-background"
                   >
                     <option value="">Select range...</option>
-                    <option value="25-50k">$25K - $50K</option>
-                    <option value="50-100k">$50K - $100K</option>
-                    <option value="100-250k">$100K - $250K</option>
-                    <option value="250k+">$250K+</option>
+                    <option value="5-10m">MK 5,000,000 - MK 10,000,000</option>
+                    <option value="10-25m">MK 10,000,000 - MK 25,000,000</option>
+                    <option value="25-50m">MK 25,000,000 - MK 50,000,000</option>
+                    <option value="50m+">MK 50,000,000+</option>
                     <option value="tbd">To be determined</option>
                   </select>
                 </div>
